@@ -15,9 +15,15 @@ const GameLobby = () => {
 
   return (
     <>
-      <div>GameLobby</div>
+      <div className='row mx-4'>
+        <div className="col-12">
+          <span style={{ fontSize: '2.5em' }}>
+            Games
+          </span>
+        </div>
+      </div>
       <div className="row mx-4">
-        {games?.map(game => <GameCard key={`game_card_` + game.name} title={game.name} category={game.category} timeFrameinMin={game.timeFrame} difficuly={game.difficulty}></GameCard>)}
+        {games?.map(game => <GameCard key={`game_card_` + game.name} id={game.id} title={game.name} category={game.category} timeFrameinMin={game.timeFrame} difficuly={game.difficulty}></GameCard>)}
       </div>
     </>
   )

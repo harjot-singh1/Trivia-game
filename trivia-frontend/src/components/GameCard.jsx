@@ -1,7 +1,9 @@
-import React from 'react'
-import './GameCard.css'
+import React from 'react';
+import './GameCard.css';
+import { Link } from 'react-router-dom';
 
-const GameCard = ({ title, category, timeFrameinMin, difficuly }) => {
+
+const GameCard = ({ id, title, category, timeFrameinMin, difficuly }) => {
 
     let borderColor;
 
@@ -29,7 +31,8 @@ const GameCard = ({ title, category, timeFrameinMin, difficuly }) => {
             </div>
             <div className="row">
                 <div className="col-6">
-                    <button className='btn btn-outline-secondary details-btn'>Details</button>
+                    <Link to={'/game-details/' + id} className='btn btn-outline-secondary details-btn'
+                        style={{ textDecoration: 'none' }}> Details</Link>
                 </div>
                 <div className="col-2 offset-3">
                     <button className='btn btn-outline-success join-btn  d-flex justify-content-end'>Join</button>
