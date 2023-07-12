@@ -9,13 +9,14 @@ import axios from 'axios'
 import './AdminCategory.css'
 
 const AdminCategoryScreen = () => {
-  const [categories,setCategories] = useState([{"createdAt":"July 13, 2023 at 2:09:28 PM UTC-3","id":1251,"subCategories":[{"name":"Code smell"}],"name":"Software development","updatedAt":"July 15, 2023 at 2:09:28 PM UTC-3"}])
+  const [categories,setCategories] = useState([{"createdAt":"2023-07-11T17:55:29.385Z","id":2227,"subCategories":[{"name":"Maths"},{"name":"dfs"}],"name":"Science","updatedAt":"2023-07-11T17:55:29.385Z"},{"createdAt":"2023-07-11T18:21:39.415Z","id":3382,"subCategories":[{"name":"Code smell"},{"name":"Git"}],"name":"Software Development","updatedAt":"2023-07-11T18:21:39.415Z"}])
   const [newCategoryName,setNewCategoryName] = useState("")
   const [newSubCategories,setNewSubCategories] = useState([])
   const [newSubCategory,setNewSubCategory] = useState("")
   const [selectedId,setSelectedId] = useState(0)
-  const [deleteSubCategory,setDeleteSubCategory] = useState("")
-  const [selected,setSelected] = useState({})
+  const [selectedCreatedAt,setSelectedCreatedAt] = useState("")
+  // const [deleteSubCategory,setDeleteSubCategory] = useState("")
+  // const [selected,setSelected] = useState({})
 
   const [open, setOpen] = useState(false)
   const [openEdit, setEditOpen] = useState(false)
@@ -28,12 +29,14 @@ const AdminCategoryScreen = () => {
       setNewSubCategory("")
       setNewSubCategories([])
       setNewCategoryName("")
+      setSelectedCreatedAt("")
       setOpen(false)
     };
 
     const openEditModel = (item) => {
       setNewCategoryName(item.name)
       setSelectedId(item.id)
+      setSelectedCreatedAt(item.createdAt)
       var sub_categories = []
       item.subCategories.map((i)=>{
         sub_categories.push(i.name)
@@ -84,9 +87,9 @@ const AdminCategoryScreen = () => {
         }
 
         console.log(payload)
-        axios.post("https://8bdevixqj9.execute-api.us-east-1.amazonaws.com/category/create",payload,(res)=>{
+        axios.post("https://8bdevixqj9.execute-api.us-east-1.amazonaws.com/category/create",payload).then((res)=>{
           if(res.data == "Added"){
-            window.location.href="admin/category"
+            window.location.href="/admin/category"
           }else {
             alert("Error occured while adding category")
           }
@@ -109,14 +112,14 @@ const AdminCategoryScreen = () => {
           id: selectedId,
           name: newCategoryName,
           subCategories: sub_categories,
-          createdAt: new Date(),
+          createdAt: selectedCreatedAt,
           updatedAt: new Date()
         }
 
-        console.log(payload)
-        axios.put("https://8bdevixqj9.execute-api.us-east-1.amazonaws.com/category/update",payload,(res)=>{
+        // console.log(payload)
+        axios.put("https://8bdevixqj9.execute-api.us-east-1.amazonaws.com/category/update",payload).then((res)=>{
           if(res.data == "Updated"){
-            window.location.href="admin/category"
+            window.location.href="/admin/category"
           }else {
             alert("Error occured while updating category")
           }
@@ -135,9 +138,9 @@ const AdminCategoryScreen = () => {
           id: parseInt(id),
         }
 
-        axios.delete("https://8bdevixqj9.execute-api.us-east-1.amazonaws.com/category/delete",payload,(res)=>{
+        axios.post("https://8bdevixqj9.execute-api.us-east-1.amazonaws.com/category/delete",payload).then((res)=>{
           if(res.data == "Deleted"){
-            window.location.href="admin/category"
+            window.location.href="/admin/category"
           }else {
             alert("Error occured while deleting category")
           }
@@ -155,18 +158,20 @@ const AdminCategoryScreen = () => {
       console.log(error)
     })
   },[])
+
   return (
     <>
       <Header />
       <main className='p-4'>
-        <h3>Category</h3>
+        <h3>Categories</h3>
         <div className='col-12 d-flex align-items-center justify-content-end'>
           <Button variant="contained" onClick={()=>openModel()}>Create Category</Button>
         </div>
         <div className='col-12 d-flex align-items-center justify-content-start'>
           {
             categories.map((category)=>
-              <div className='col-3 d-flex flex-column align-items-center p-2 category-card'>
+              <div className='col-3 d-flex flex-column align-items-center p-2 m-1 category-card'>
+                <h6>ID: {category.id}</h6>
                 <h6>{category.name}</h6>
                 <div className='mt-2 col-12 d-flex align-items-start justify-content-start'> 
                   <ul>
@@ -176,6 +181,12 @@ const AdminCategoryScreen = () => {
                       )
                     }
                   </ul>
+                </div>
+                <div className='mt-2 col-12 d-flex align-items-start justify-content-start'> 
+                  Created At: {category.createdAt}
+                </div>
+                <div className='mt-2 col-12 d-flex align-items-start justify-content-start'> 
+                  Updated At: {category.updatedAt}
                 </div>
                 <div className='col-12 d-flex flex-column'>
                   <Button variant="outlined" onClick={()=>openEditModel(category)}>Edit</Button>
