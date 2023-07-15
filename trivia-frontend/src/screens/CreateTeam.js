@@ -7,7 +7,6 @@ import { useNavigate } from 'react-router-dom';
 const CreateTeam = () => {
 
     const create_new_team_url = "https://us-central1-serverless-391112.cloudfunctions.net/create-new-teamv2";
-    const proxy_server = "https://cors-anywhere.herokuapp.com/";
 
     const [teamMemberId, setTeamMemberId] = useState(['']);
 
@@ -33,7 +32,7 @@ const CreateTeam = () => {
         console.log(requestBody);
 
         try{
-            const response = await axios.post(proxy_server + create_new_team_url, requestBody);
+            const response = await axios.post(create_new_team_url, requestBody);
 
             const responseData = response.data;
             navigate('/create-team-success', {state:{message:responseData['message'], teamName:responseData['team_name']}});

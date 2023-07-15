@@ -6,7 +6,6 @@ import {useNavigate} from "react-router-dom";
 const SendTeamInvite = () => {
 
     const send_team_invite_url = "https://us-central1-serverless-391112.cloudfunctions.net/call-send-invite";
-    const proxy_server = "https://cors-anywhere.herokuapp.com/";
 
     const [recipientId, setRecipientId] = useState('');
 
@@ -21,7 +20,7 @@ const SendTeamInvite = () => {
         console.log(requestBody);
 
         try{
-            const response = await axios.post(proxy_server + send_team_invite_url, requestBody);
+            const response = await axios.post(send_team_invite_url, requestBody);
             const responseData = response.data;
             console.log(responseData)
             navigate('/send-invite-success', {state:{message:responseData['message']}});
