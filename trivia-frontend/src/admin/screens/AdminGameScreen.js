@@ -220,10 +220,10 @@ const AdminGameScreen = () => {
         <div className='col-12 d-flex align-items-center justify-content-end'>
           <Button variant="contained" onClick={()=>openModel()}>Create Game</Button>
         </div>
-        <div className='col-12 d-flex align-items-center justify-content-start'>
+        <div className='col-12 d-flex flex-wrap align-items-center justify-content-start'>
           {
             games.map((game)=>
-              <div className='col-6 d-flex flex-column align-items-center p-2 m-1 category-card'>
+              <div className='col-5 d-flex flex-column align-items-center p-2 m-1 category-card'>
                 <h6>ID: {game.id}</h6>
                 <h6>{game.name}</h6>
                 <div className='mt-2 col-12 d-flex align-items-start justify-content-start'> 

@@ -167,7 +167,7 @@ const AdminCategoryScreen = () => {
         <div className='col-12 d-flex align-items-center justify-content-end'>
           <Button variant="contained" onClick={()=>openModel()}>Create Category</Button>
         </div>
-        <div className='col-12 d-flex align-items-center justify-content-start'>
+        <div className='col-12 d-flex flex-wrap align-items-center justify-content-start'>
           {
             categories.map((category)=>
               <div className='col-3 d-flex flex-column align-items-center p-2 m-1 category-card'>
