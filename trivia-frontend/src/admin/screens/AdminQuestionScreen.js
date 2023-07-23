@@ -17,6 +17,7 @@ const AdminQuestionScreen = () => {
   const [newOptions,setNewOptions] = useState([])
   const [newOption,setNewOption] = useState("")
   const [newAnswer,setNewAnswer] = useState(1)
+  const [newExplanation,setNewExplanation] = useState("")
   const [newCategory,setNewCategory] = useState("")
   const [newSubCategory,setNewSubCategory] = useState("")
   const [newDifficultyLevel,setNewDifficultyLevel] = useState("easy")
@@ -35,6 +36,7 @@ const AdminQuestionScreen = () => {
       setNewOptions([])
       setNewQuestionName("")
       setNewAnswer(1)
+      setNewExplanation("")
       setNewSubCategory("")
       setNewCategory("")
       setNewDifficultyLevel("easy")
@@ -47,6 +49,7 @@ const AdminQuestionScreen = () => {
       setSelectedCreatedAt(item.createdAt)
       setNewOptions(item.options)
       setNewAnswer(item.answer)
+      setNewExplanation(item.explanation)
       setNewCategory(item.category)
       setNewSubCategory(item.subCategory)
       setNewDifficultyLevel(item.difficulty)
@@ -88,7 +91,8 @@ const AdminQuestionScreen = () => {
           options: newOptions,
           category: newCategory,
           subCategory: newSubCategory,
-          answer: newAnswer,
+          answer: parseInt(newAnswer)-1,
+          explanation: newExplanation,
           difficulty: newDifficultyLevel,
           createdAt: new Date(),
           updatedAt: new Date()
@@ -118,7 +122,8 @@ const AdminQuestionScreen = () => {
           options: newOptions,
           category: newCategory,
           subCategory: newSubCategory,
-          answer: newAnswer,
+          answer: parseInt(newAnswer)-1,
+          explanation: newExplanation,
           difficulty: newDifficultyLevel,
           createdAt: selectedCreatedAt,
           updatedAt: new Date()
@@ -180,7 +185,7 @@ const AdminQuestionScreen = () => {
         <div className='col-12 d-flex align-items-center justify-content-end'>
           <Button variant="contained" onClick={()=>openModel()}>Create Question</Button>
         </div>
-        <div className='col-12 d-flex align-items-center justify-content-start'>
+        <div className='col-12 d-flex flex-wrap align-items-center justify-content-start'>
           {
             questions.map((question)=>
               <div className='col-4 d-flex flex-column align-items-center p-2 m-1 category-card'>
@@ -203,7 +208,10 @@ const AdminQuestionScreen = () => {
                   Sub Category: {question.subCategory}
                 </div>
                 <div className='mt-2 col-12 d-flex align-items-start justify-content-start'> 
-                  Answer: {question.answer}
+                  Answer: {question.answer+1}
+                </div>
+                <div className='mt-2 col-12 d-flex align-items-start justify-content-start'> 
+                  Explanation: {question.explanation}
                 </div>
                 <div className='mt-2 col-12 d-flex align-items-start justify-content-start'> 
                   Difficulty: {question.difficulty}
@@ -232,7 +240,7 @@ const AdminQuestionScreen = () => {
       >
         <DialogContent>
           <FormControl>
-            <input className='mt-2' type="text" placeholder='Category name' value={newQuestionName} onChange={(e)=>setNewQuestionName(e.target.value)}/>
+            <input className='mt-2' type="text" placeholder='Question name' value={newQuestionName} onChange={(e)=>setNewQuestionName(e.target.value)}/>
             <div className='d-flex flex-column'>
               {
                 newOptions.map((item,index)=><div>Option {index+1}: {item} <HighlightOffIcon fontSize="large" onClick={()=>removeOption(item)} className='px-2' /></div>)
@@ -321,7 +329,7 @@ const AdminQuestionScreen = () => {
       >
         <DialogContent>
         <FormControl>
-            <input className='mt-2' type="text" placeholder='Category name' value={newQuestionName} onChange={(e)=>setNewQuestionName(e.target.value)}/>
+            <input className='mt-2' type="text" placeholder='Question name' value={newQuestionName} onChange={(e)=>setNewQuestionName(e.target.value)}/>
             <div className='d-flex flex-column'>
               {
                 newOptions.map((item,index)=><div>Option {index+1}: {item} <HighlightOffIcon fontSize="large" onClick={()=>removeOption(item)} className='px-2' /></div>)
@@ -333,7 +341,7 @@ const AdminQuestionScreen = () => {
             </div>
 
             <div className='mt-2'>
-              <label for="cars">Select Category: </label>
+              <label for="categories">Select Category: </label>
               <select name="category" value={newCategory} onChange={(e)=>setNewCategory(e.target.value)}>
                 {
                   categories.map((category)=>
@@ -344,7 +352,7 @@ const AdminQuestionScreen = () => {
             </div>
 
             <div className='mt-2'>
-              <label for="cars">Select Sub Category: </label>
+              <label for="categories">Select Sub Category: </label>
                 {/* {newCategory} */}
               <select name="subCategory" onChange={(e)=>setNewSubCategory(e.target.value)}>
                 {
@@ -370,6 +378,8 @@ const AdminQuestionScreen = () => {
                 }
               </select>
             </div>
+
+            <textarea className='mt-2' type="text" placeholder='Question explanation' value={newExplanation} onChange={(e)=>setNewExplanation(e.target.value)}></textarea>
 
             <div className='mt-2'>
               <label for="answer">Difficulty Level: </label>

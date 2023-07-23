@@ -1,4 +1,5 @@
 const AWS = require('aws-sdk')
+const lambda = new AWS.Lambda()
 
 exports.handler = async(event) => {
     try {
@@ -13,6 +14,14 @@ exports.handler = async(event) => {
         }
 
         await db_connection.delete(deleteGameById).promise()
+        
+        const invokeParams = {
+            FunctionName: 'TriviaDashboard',
+            InvocationType: 'RequestResponse',
+            Payload: "" 
+        };
+
+        await lambda.invoke(invokeParams).promise()
         
         var response = {
             statusCode: 200,

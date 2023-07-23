@@ -1,4 +1,5 @@
 const AWS = require('aws-sdk')
+const lambda = new AWS.Lambda()
 
 const generateId = () => {
     const lower = 1000
@@ -15,6 +16,14 @@ exports.handler = async(event) => {
     
         await db_connection.put({TableName: tableName,Item: {id: generateId(), ...req}}).promise()
     
+        const invokeParams = {
+            FunctionName: 'TriviaDashboard',
+            InvocationType: 'RequestResponse',
+            Payload: "" 
+        };
+
+        await lambda.invoke(invokeParams).promise()
+
         var response = {
             statusCode: 200,
             body: "Added"
