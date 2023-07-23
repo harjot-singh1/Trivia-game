@@ -1,4 +1,5 @@
 const AWS = require('aws-sdk')
+const lambda = new AWS.Lambda()
 
 exports.handler = async(event) => {
     try {
@@ -7,6 +8,14 @@ exports.handler = async(event) => {
         const tableName = "trivia_questions"
        
         await db_connection.put({TableName: tableName,Item: {...req}}).promise()
+        
+        const triggerDashboard = {
+            FunctionName: 'TriviaDashboard',
+            InvocationType: 'RequestResponse',
+            Payload: "" 
+        };
+
+        await lambda.invoke(triggerDashboard).promise()
         
         var response = {
             statusCode: 200,

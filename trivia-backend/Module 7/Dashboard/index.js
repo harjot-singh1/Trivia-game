@@ -1,15 +1,13 @@
 const AWS = require('aws-sdk')
-// const createCsvWriter = require('csv-writer').createObjectCsvWriter
 const CSV = require('csv-writer')
 const {Storage} = require('@google-cloud/storage')
 const fs = require('fs');
 const path = require('path');
 const filePath = path.join(__dirname, "stats.csv");
-// const filePathNew = path.join(__dirname, "test.csv");
 const filePathCredentials = path.join(__dirname, "my-project-31313-579a51d77020.json");
 
 const uploadFile = async (data) => {
-    const file_data1 = "Games,Categories,Questions\n25,7,245"
+    var file_data1 = "Games,Categories,Questions\n"+data.total_games+","+data.total_categories+","+data.total_questions
     fs.writeFileSync("/tmp/stats1.csv", file_data1);
 
     var file_data2 = "Category,Questions\n"
@@ -65,14 +63,8 @@ exports.handler = async(event) => {
             category_stats: category_stats
         }
 
-        // const fileContents = fs.readFileSync(filePath, 'utf8');
-
-        // Upload the CSV file to Google Cloud Storage
-        // const storage = new Storage();
-        // await storage.bucket("trivia-statistics").upload(filePath, {
-        //     destination: "stats.csv"
-        // });
         await uploadFile(res)
+        // const file_data1 = "Games,Categories,Questions\n"+res.total_games+","+res.total_categories+","+res.total_questions
 
         var response = {
             statusCode: 200,
