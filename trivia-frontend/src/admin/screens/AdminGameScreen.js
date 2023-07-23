@@ -28,6 +28,7 @@ const AdminGameScreen = () => {
   const [newGameName,setNewGameName] = useState("")
   const [newCategory,setNewCategory] = useState("")
   const [newDifficultyLevel,setNewDifficultyLevel] = useState("easy")
+  const [newDescription,setNewDescription] = useState("")
   const [startTime,setStartTime] = useState("")
   const [endTime,setEndTime] = useState("")
   const [selectedId,setSelectedId] = useState(0)
@@ -51,6 +52,7 @@ const AdminGameScreen = () => {
       setNewGameName("")
       setNewCategory("")
       setNewDifficultyLevel("easy")
+      setNewDescription("")
       setFilteredQuestions([])
       setOpen(false)
     };
@@ -61,6 +63,7 @@ const AdminGameScreen = () => {
       setSelectedCreatedAt(item.createdAt)
       setNewCategory(item.category)
       setNewDifficultyLevel(item.difficulty)
+      setNewDescription(item.description)
       setStartTime(item.startTime)
       setEndTime(item.endTime)
       var filtered_question_list = []
@@ -86,6 +89,7 @@ const AdminGameScreen = () => {
       setStartTime("")
       setEndTime("")
       setSelectedCreatedAt("")
+      setNewDescription("")
       setEditOpen(false)
     };
 
@@ -104,6 +108,7 @@ const AdminGameScreen = () => {
           questions: game_questions,
           category: newCategory,
           difficulty: newDifficultyLevel,
+          description: newDescription,
           startTime: startTime,
           endTime: endTime,
           createdAt: new Date(),
@@ -112,7 +117,7 @@ const AdminGameScreen = () => {
 
         console.log(payload)
         axios.post("https://8bdevixqj9.execute-api.us-east-1.amazonaws.com/game/create",payload,(res)=>{
-          if(res.data == "Added"){
+          if(res){
             window.location.href="admin/game"
           }else {
             alert("Error occured while adding question")
@@ -141,6 +146,7 @@ const AdminGameScreen = () => {
           questions: game_questions,
           category: newCategory,
           difficulty: newDifficultyLevel,
+          description: newDescription,
           startTime: startTime,
           endTime: endTime,
           createdAt: selectedCreatedAt,
@@ -252,6 +258,12 @@ const AdminGameScreen = () => {
                 <div className='mt-2 col-12 d-flex align-items-start justify-content-start'> 
                   Difficulty: {game.difficulty}
                 </div>
+                {
+                  game.description &&
+                  <div className='mt-2 col-12 d-flex align-items-start justify-content-start'> 
+                    Description: {game.description}
+                  </div>
+                }
                 <div className='mt-2 col-12 d-flex align-items-start justify-content-start'> 
                   Start Time: {game.startTime}
                 </div>
@@ -337,6 +349,10 @@ const AdminGameScreen = () => {
                 <option value="hard">Hard</option>
               </select>
             </div>
+            <div className='mt-2 d-flex'>
+              <label>Description: </label>
+              <textarea className='m-1 p-1' value={newDescription} onChange={(e)=>setNewDescription(e.target.value)}></textarea>
+            </div>
             <div className='mt-2'>
               <label>Start Time: </label>
               <input className='m-1 p-1' type="datetime-local" value={startTime} onChange={(e)=>setStartTime(e.target.value)} />
@@ -417,6 +433,10 @@ const AdminGameScreen = () => {
                 <option value="medium">Medium</option>
                 <option value="hard">Hard</option>
               </select>
+            </div>
+            <div className='mt-2 d-flex'>
+              <label>Description: </label>
+              <textarea className='m-1 p-1' value={newDescription} onChange={(e)=>setNewDescription(e.target.value)}></textarea>
             </div>
             <div className='mt-2'>
               <label>Start Time: </label>
