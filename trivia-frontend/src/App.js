@@ -10,7 +10,7 @@ function App() {
     <>
       <Router>
         <Routes>
-          <Route exact path="/" element={<Navigate replace to="/home" />} />
+          <Route exact path="/" element={<Navigate replace to="/game-lobby" />} />
           <Route exact path="/home" Component={HomeScreen} />
           <Route exact path="/game-lobby" Component={GameLobby} />
           <Route exact path="/game-details/:id" Component={GameDetails} />
