@@ -5,6 +5,7 @@ import AdminHomeScreen from './admin/screens/AdminHomeScreen'
 import AdminCategoryScreen from './admin/screens/AdminCategoryScreen'
 import AdminQuestionScreen from './admin/screens/AdminQuestionScreen'
 import AdminGameScreen from './admin/screens/AdminGameScreen'
+import LeaderboardScreen from "./screens/LeaderboardScreen"
 
 import 'bootstrap/dist/css/bootstrap.min.css'
 
@@ -15,6 +16,7 @@ function App() {
         <Routes>
           <Route exact path="/" element={<Navigate replace to="/home"/>} />
           <Route exact path="/home" Component={HomeScreen} />
+          <Route exact path="/leaderboard" Component={LeaderboardScreen} />
           {/* Admin Routes Start */}
           <Route exact path="/admin/home" Component={AdminHomeScreen} />
           <Route exact path="/admin/category" Component={AdminCategoryScreen} />
