@@ -1,6 +1,5 @@
 /frontend-auth/node_modules
 /frontend-auth/package-lock.json
-/frontend-auth/package.json
 /Authentication/env
 .DS_Store
 /frontend-auth/.DS_Store
