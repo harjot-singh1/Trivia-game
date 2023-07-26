@@ -15,8 +15,9 @@ const GameLobby = () => {
     // You can perform any other operations or send the value to the server if needed
   };
 
+
   useEffect(() => {
-    axios.get(`https://drz42y1qfl.execute-api.us-east-1.amazonaws.com/test/getgames`)
+    axios.get(`https://8bdevixqj9.execute-api.us-east-1.amazonaws.com/game/get`)
       .then(res => {
         setGames(res.data);
       })
@@ -32,7 +33,7 @@ const GameLobby = () => {
         </div>
       </div>
       <div className="row mx-4" style={{ maxHeight: "90vh", overflow: "scroll" }}>
-        {games?.map(game => <GameCard key={`game_card_` + game.id} id={game.id} title={game.name} category={game.category} timeFrameinMin={game.timeFrame} difficuly={game.difficulty}></GameCard>)}
+        {games?.map(game => <GameCard key={`game_card_` + game.id} id={game.id} title={game.name} category={game.category} timeFrameinMin={(new Date(game.endTime).getTime() > Date.now()) ? new Date(game.endTime).toLocaleString() : 'Expired'} difficuly={game.difficulty} expired={(new Date(game.endTime).getTime() <= Date.now())}></GameCard>)}
       </div>
       <button className='action-button' onClick={() => setShow(true)}>
         <img src='../assets/team.png' alt="Join Game" height='20' width='20' />
