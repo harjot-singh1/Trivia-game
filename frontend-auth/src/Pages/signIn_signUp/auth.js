@@ -89,49 +89,52 @@ const Auth = () => {
     };
 
     return (
-        <div id="login-box">
-            <div className="left">
-                {url === "/login" ? (
-                    <h1>Trivia Login</h1>
-                ) : (
-                    <h1>Trivia Sign up</h1>
-                )}
-                <form id="auth-from" onSubmit={validate}>
-                    <input
-                        type="text"
-                        id="email"
-                        value={email}
-                        onChange={(event) => {
-                            setEmail(event.target.value);
-                        }}
-                        name="email"
-                        placeholder="Email"
-                    />
-                    <input
-                        type="password"
-                        id="password"
-                        value={pass}
-                        onChange={(event) => {
-                            setPass(event.target.value);
-                        }}
-                        name="password"
-                        placeholder="Password"
-                    />
-                    <input type="submit" id="signUp" name="signup_submit" value="Submit" />
-                </form>
-            </div>
-            {url === "/login" && (
-                <div>
-                    <h2 className="or">OR</h2>
-                    <div className="right">
-                        <span className="loginwith">Sign in with social network</span>
-                        <button className="social-signin facebook">Log in with facebook</button>
-                        <button className="social-signin google" onClick={googleSignIn} id="login">Log in with Google</button>
+        <div className="container-fluid login-container">
+            <div className="row h-100" id="login-box">
+                <div className="col-5 offset-7 p-5 login-area">
+                    <div className="left">
+                        {url === "/login" ? (
+                            <h1>Trivia Titans</h1>
+                        ) : (
+                            <h1>Trivia Sign up</h1>
+                        )}
+                        <form id="auth-from" onSubmit={validate}>
+                            <input
+                                type="text"
+                                id="email"
+                                value={email}
+                                onChange={(event) => {
+                                    setEmail(event.target.value);
+                                }}
+                                name="email"
+                                placeholder="Email"
+                            />
+                            <input
+                                type="password"
+                                id="password"
+                                value={pass}
+                                onChange={(event) => {
+                                    setPass(event.target.value);
+                                }}
+                                name="password"
+                                placeholder="Password"
+                            />
+                            <input type="submit" id="signUp" name="signup_submit" value="Submit" />
+                        </form>
                     </div>
-                    <a href="/signup">Signup</a>
-                </div>
+                    {url === "/login" && (
+                        <div className="text-center">
+                            <h2 className="or">OR</h2>
+                            <div className="right">
+                                <button className="social-signin facebook">Log in with facebook</button>
+                                <button className="social-signin google" onClick={googleSignIn} id="login">Log in with Google</button>
+                            </div>
+                            <a href="/signup" style={{ textDecoration: "none" }}>Signup</a>
+                        </div>
 
-            )}
+                    )}
+                </div>
+            </div>
         </div>
     );
 };

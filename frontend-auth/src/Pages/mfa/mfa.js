@@ -59,56 +59,58 @@ const Mfa = () => {
     }
 
     return (
-        <div>
-            <form id="mfa-form" onSubmit={submitmfa}>
+        <div className="container-fluid mfa-container">
+            <div className="row h-100">
+                <div className="col-5 offset-7 p-5  mfa-panel">
+                    <form id="mfa-form" onSubmit={submitmfa}>
+                        {url === "/createmfa" ? (<div className="input-container">
+                            <h1>Create MFA</h1>
+                            <label htmlFor="q1">{ques[0]}</label>
+                            <input
+                                type="text"
+                                id="q1"
 
+                                onChange={(event) => {
+                                    ans[0] = (event.target.value);
+                                }}
+                            />
+                            <label htmlFor="q2">{ques[1]}</label>
+                            <input
+                                type="text"
+                                id="q2"
 
-                {url === "/createmfa" ? (<div className="input-container">
-                    <h1>Create MFA</h1>
-                    <label htmlFor="q1">{ques[0]}</label>
-                    <input
-                        type="text"
-                        id="q1"
+                                onChange={(event) => {
+                                    ans[1] = (event.target.value);
+                                }}
 
-                        onChange={(event) => {
-                            ans[0] = (event.target.value);
-                        }}
-                    />
-                    <label htmlFor="q2">{ques[1]}</label>
-                    <input
-                        type="text"
-                        id="q2"
+                            />
+                            <label htmlFor="q3">{ques[2]}</label>
+                            <input
+                                type="text"
+                                id="q3"
 
-                        onChange={(event) => {
-                            ans[1] = (event.target.value);
-                        }}
+                                onChange={(event) => {
+                                    ans[2] = (event.target.value);
+                                }}
+                            /></div>) : (<div className="input-container">
+                                <h1>Verify MFA</h1>
+                                <label htmlFor="ans">{ques[index]}</label>
+                                <input
+                                    type="text"
+                                    id="ans"
 
-                    />
-                    <label htmlFor="q3">{ques[2]}</label>
-                    <input
-                        type="text"
-                        id="q3"
+                                    onChange={(event) => {
+                                        ans[index] = (event.target.value);
+                                    }}
 
-                        onChange={(event) => {
-                            ans[2] = (event.target.value);
-                        }}
-                    /></div>) : (<div className="input-container">
-                        <h1>Verify MFA</h1>
-                        <label htmlFor="ans">{ques[index]}</label>
-                        <input
-                            type="text"
-                            id="ans"
+                                />
+                            </div>)}
 
-                            onChange={(event) => {
-                                ans[index] = (event.target.value);
-                            }}
+                        <input type="submit" name="mfa_submit" value="Submit" />
 
-                        />
-                    </div>)}
-
-                <input type="submit" name="mfa_submit" value="Submit" />
-
-            </form>
+                    </form>
+                </div>
+            </div>
         </div>
     )
 }
