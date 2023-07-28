@@ -22,7 +22,6 @@ code {
   border-radius: 50%;
   border: 0;
   outline: 0;
-  font-size: 24px;
   z-index: 2;
   transition: all .3s;
 }

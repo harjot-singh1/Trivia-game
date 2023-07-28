@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
-import './GameDetails.css';
 import { Link, useParams } from 'react-router-dom';
+import './GameDetails.css';
 
 const GameDetails = () => {
     const { id } = useParams();

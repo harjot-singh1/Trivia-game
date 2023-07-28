@@ -4,6 +4,7 @@ import { Modal } from "react-bootstrap";
 import GameCard from './GameCard';
 import NavBar from './NavBar';
 import Filter from './Filter';
+import teamImage from '../team.png'; // Import the image using the correct path
 
 const GameLobby = () => {
 
@@ -34,7 +35,7 @@ const GameLobby = () => {
       .then(res => {
         let filteredGames = [];
         filteredGames = selectedCategory !== "" ? res.data.filter(game => game.category === selectedCategory) : res.data;
-        filteredGames = selectedDifficulty !== "" ? res.data.filter(game => game.difficulty === selectedDifficulty) : filteredGames;
+        filteredGames = selectedDifficulty !== "" ? filteredGames.filter(game => game.difficulty === selectedDifficulty) : filteredGames;
         console.log("Filtered games: " + JSON.stringify(filteredGames));
         setGames(filteredGames);
       })
@@ -61,7 +62,7 @@ const GameLobby = () => {
         {games?.map(game => <GameCard key={`game_card_` + game.id} id={game.id} title={game.name} category={game.category} timeFrameinMin={(new Date(game.endTime).getTime() > Date.now()) ? new Date(game.endTime).toLocaleString() : 'Expired'} difficuly={game.difficulty} expired={(new Date(game.endTime).getTime() <= Date.now())}></GameCard>)}
       </div>
       <button className='action-button' onClick={() => setShow(true)}>
-        <img src='../assets/team.png' alt="Join Game" height='20' width='20' />
+        <img src={teamImage} alt="Join Game" height='45' width='45' />
       </button>
       <Modal
         size="sm"
@@ -86,7 +87,7 @@ const GameLobby = () => {
           </form>
         </Modal.Body>
       </Modal>
-      {filterVisible && <Filter onApply={handleFilterApply} />} {/* Step 4: Conditionally render the Filter component */}
+      {filterVisible && <Filter onApply={handleFilterApply} />}
     </>
   )
 }
