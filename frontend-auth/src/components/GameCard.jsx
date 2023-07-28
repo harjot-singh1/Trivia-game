@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import './GameCard.css';
 
 
-const GameCard = ({ id, title, category, timeFrameinMin, difficuly }) => {
+const GameCard = ({ id, title, category, timeFrameinMin, difficuly, expired }) => {
 
     let borderColor;
 
@@ -65,7 +65,7 @@ const GameCard = ({ id, title, category, timeFrameinMin, difficuly }) => {
                         style={{ textDecoration: 'none' }}> Details</Link>
                 </div>
                 <div className="col-2 offset-3">
-                    <button className='btn btn-outline-success join-btn  d-flex justify-content-end'
+                    <button className={`btn join-btn  d-flex justify-content-end ${expired ? 'disabled' : ' btn-outline-success'}`}
                         onClick={() => handleJoinGame(id)}>Join</button>
                 </div>
             </div>

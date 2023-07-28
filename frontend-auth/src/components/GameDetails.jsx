@@ -1,15 +1,16 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import './GameDetails.css';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 
-const GameDetails = ({ id }) => {
-
+const GameDetails = () => {
+    const { id } = useParams();
     const [game, setGame] = useState({});
 
     useEffect(() => {
-        axios.get(`https://drz42y1qfl.execute-api.us-east-1.amazonaws.com/test/getGameDetails`)
+        axios.get(`https://8bdevixqj9.execute-api.us-east-1.amazonaws.com/game/get?id=` + id)
             .then(res => {
+                console.log(JSON.stringify(res));
                 setGame(res.data);
             })
     }, [])
@@ -38,7 +39,7 @@ const GameDetails = ({ id }) => {
                 </div>
                 <div className="col-3">
                     <span className="quiz-label">Time Frame:</span>
-                    <span className="quiz-info">{game.timeFrame}</span>
+                    <span className="quiz-info">{new Date(game.endTime).toLocaleString()}</span>
                 </div>
                 <div className="col-3">
                     <span className="quiz-label">Difficulty:</span>
