@@ -4,13 +4,16 @@ import { Modal } from "react-bootstrap";
 import GameCard from './GameCard';
 import NavBar from './NavBar';
 import Filter from './Filter';
-import teamImage from '../team.png'; // Import the image using the correct path
+import teamImage from '../team.png';
+import { useNavigate } from 'react-router-dom';
 
 const GameLobby = () => {
 
   const [games, setGames] = useState([]);
   const [modalShow, setShow] = useState(false);
-  const [filterVisible, setFilterVisible] = useState(false); // Step 1: State variable for filter visibility
+  const [filterVisible, setFilterVisible] = useState(false);
+  const navigate = useNavigate();
+  const [gamePin, setGamePin] = useState('');
 
   const toggleFilter = () => {
     setFilterVisible(!filterVisible); // Step 2: Function to toggle filter visibility
@@ -18,9 +21,21 @@ const GameLobby = () => {
 
   const onSubmit = (event) => {
     event.preventDefault();
-    // Handle the form submission logic here
-    console.log('Submitted');
-    // You can perform any other operations or send the value to the server if needed
+    axios.post(`https://drz42y1qfl.execute-api.us-east-1.amazonaws.com/test/joinGame/checkAllowance`, {
+      userId: JSON.parse(localStorage.getItem("userData")).email,
+      instanceId: gamePin
+    })
+      .then(res => {
+        if (res?.data?.allowed) {
+          navigate(`/waiting-room/${gamePin}`);
+        } else {
+          alert("You're not authorized to join this game.");
+        }
+      })
+  };
+
+  const handleChange = (event) => {
+    setGamePin(event.target.value);
   };
 
   useEffect(() => {
@@ -80,6 +95,8 @@ const GameLobby = () => {
                 type="number"
                 id="numberField"
                 name="numberField"
+                value={gamePin}
+                onChange={handleChange}
                 required
               />
               <button type="submit btn btn-outline-dark w-25">Submit</button>
