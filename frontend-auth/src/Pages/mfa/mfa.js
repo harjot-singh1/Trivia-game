@@ -46,7 +46,12 @@ const Mfa = () => {
                 data[ques[index]] = ans[index];
                 axios.post(`${hostName}/verify-mfa`, data).then((res) => {
                     setIsAuthenticated(true);
-                    navigate("/game-lobby");
+                    var user = JSON.parse(window.localStorage.getItem("userData"))
+                    if(user.email == "kadivarnand007@gmail.com"){
+                        navigate("/admin/home");
+                    }else {
+                        navigate("/game-lobby");
+                    }
                 }).catch((error) => {
                     alert(error);
                 })
