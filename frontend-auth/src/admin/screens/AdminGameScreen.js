@@ -18,8 +18,10 @@ const data_grid_columns = [
 ];
 
 const AdminGameScreen = () => {
-  const [games,setGames] = useState([{"startTime":"2023-07-12T22:49","questions":[{"difficulty":"easy","createdAt":"2023-07-11T19:31:03.881Z","subCategory":"Maths","question":"Sample Question ... ?","answer":"3","options":["option a","option b","option c","option d"],"id":4996,"category":"Science","updatedAt":"2023-07-11T19:32:56.828Z"}],"endTime":"2023-07-15T22:49","updatedAt":"2023-07-12T01:50:47.153Z","category":"Science","createdAt":"2023-07-12T01:50:47.153Z","difficulty":"medium","id":7985,"name":"ABC"}])
-  const [questions,setQuestions] = useState([{"question": "Sample Question ... ?","subCategory":"Maths","updatedAt":"2023-07-11T19:32:56.828Z","category":"Science","createdAt":"2023-07-11T19:31:03.881Z","options":["option a","option b","option c","option d"],"difficulty":"easy","id":4996,"answer":"3"}])
+  // const [games,setGames] = useState([{"startTime":"2023-07-12T22:49","questions":[{"difficulty":"easy","createdAt":"2023-07-11T19:31:03.881Z","subCategory":"Maths","question":"Sample Question ... ?","answer":"3","options":["option a","option b","option c","option d"],"id":4996,"category":"Science","updatedAt":"2023-07-11T19:32:56.828Z"}],"endTime":"2023-07-15T22:49","updatedAt":"2023-07-12T01:50:47.153Z","category":"Science","createdAt":"2023-07-12T01:50:47.153Z","difficulty":"medium","id":7985,"name":"ABC"}])
+  const [games,setGames] = useState([])
+  // const [questions,setQuestions] = useState([{"question": "Sample Question ... ?","subCategory":"Maths","updatedAt":"2023-07-11T19:32:56.828Z","category":"Science","createdAt":"2023-07-11T19:31:03.881Z","options":["option a","option b","option c","option d"],"difficulty":"easy","id":4996,"answer":"3"}])
+  const [questions,setQuestions] = useState([])
   const [filteredQuestions,setFilteredQuestions] = useState([])
   const [categories,setCategories] = useState([{"createdAt":"2023-07-11T19:45:24.609Z","id":2227,"subCategories":[{"name":"Maths"},{"name":"Physics"}],"name":"Science","updatedAt":"2023-07-11T19:45:24.609Z"},{"createdAt":"2023-07-11T18:21:39.415Z","id":3382,"subCategories":[{"name":"Code smell"},{"name":"Git"}],"name":"Software Development","updatedAt":"2023-07-11T18:21:39.415Z"}])
   const [selectedQuestions,setSelectedQuestions] = useState([])
