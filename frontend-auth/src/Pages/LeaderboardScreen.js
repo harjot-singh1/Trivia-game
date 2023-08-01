@@ -31,7 +31,8 @@ const LeaderboardScreen = () => {
       {/* <Header /> */}
       <main className='p-4' style={{width: "100%",height: "100vh"}}>
         <h3>Leaderboard</h3>
-        <iframe width="80%" height="80%" src="https://lookerstudio.google.com/embed/reporting/f4677e7c-7595-4bb3-8774-81da4c02d558/page/Jk8XD" frameborder="0" allowfullscreen></iframe>
+        {/* <iframe width="80%" height="80%" src="https://lookerstudio.google.com/embed/reporting/f4677e7c-7595-4bb3-8774-81da4c02d558/page/Jk8XD" frameborder="0" allowfullscreen></iframe> */}
+        <iframe width="95%" height="80%" src="https://lookerstudio.google.com/embed/reporting/30fbbe34-a5ca-4a0f-9536-d4ba7a67572c/page/i9UYD" frameborder="0" allowfullscreen></iframe>
       </main>
     </>
   )
