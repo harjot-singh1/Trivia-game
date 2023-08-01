@@ -1,14 +1,18 @@
+.login-container {
+    height: 100vh;
+    background-image: url(../../login-background.jpg);
+    background-size: contain;
+}
+
+.login-area {
+    background-color: #000;
+}
+
 #login-box {
-    position: relative;
-    margin: auto;
-    width: 400px;
-    background-color: #fff;
-    padding: 120px;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
 }
 
 #login-box .left {
-
     width: 100%;
     margin-bottom: 20px;
 }
@@ -21,8 +25,8 @@
 
 #login-box h1 {
     margin: 0 0 20px;
-    font-size: 24px;
-    color: #333;
+    font-size: 2em;
+    color: #fff;
     text-align: center;
 }
 

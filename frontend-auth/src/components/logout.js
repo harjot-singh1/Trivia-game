@@ -38,7 +38,7 @@ const Logout = () => {
 
 
     return (
-        <button onClick={signout}>Logout</button>
+        <span className="text-white" style={{ cursor: "pointer" }} onClick={signout}>Logout</span >
     )
 }
 

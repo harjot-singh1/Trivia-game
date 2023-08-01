@@ -10,6 +10,7 @@ import AdminGameScreen from './admin/screens/AdminGameScreen'
 import LeaderboardScreen from './Pages/LeaderboardScreen';
 import GameLobby from './components/GameLobby';
 import GameDetails from './components/GameDetails';
+import WaiitingRoom from './components/WaitingRoom';
 
 import {
   createBrowserRouter,
@@ -29,6 +30,10 @@ const router = createBrowserRouter([
   {
     path: "/game-lobby",
     element: <AuthProvider><GameLobby /></AuthProvider>
+  },
+  {
+    path: "/waiting-room/:id",
+    element: <AuthProvider><WaiitingRoom /></AuthProvider>
   },
   {
     path: "/game-details/:id",

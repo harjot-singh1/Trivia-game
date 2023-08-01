@@ -2,42 +2,82 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Modal } from "react-bootstrap";
 import GameCard from './GameCard';
-import Logout from './logout'
+import NavBar from './NavBar';
+import Filter from './Filter';
+import teamImage from '../team.png';
+import { useNavigate } from 'react-router-dom';
 
 const GameLobby = () => {
 
   const [games, setGames] = useState([]);
   const [modalShow, setShow] = useState(false);
+  const [filterVisible, setFilterVisible] = useState(false);
+  const navigate = useNavigate();
+  const [gamePin, setGamePin] = useState('');
+
+  const toggleFilter = () => {
+    setFilterVisible(!filterVisible); // Step 2: Function to toggle filter visibility
+  };
 
   const onSubmit = (event) => {
     event.preventDefault();
-    // Handle the form submission logic here
-    console.log('Submitted');
-    // You can perform any other operations or send the value to the server if needed
+    axios.post(`https://drz42y1qfl.execute-api.us-east-1.amazonaws.com/test/joinGame/checkAllowance`, {
+      userId: JSON.parse(localStorage.getItem("userData")).email,
+      instanceId: gamePin
+    })
+      .then(res => {
+        if (res?.data?.allowed) {
+          navigate(`/waiting-room/${gamePin}`);
+        } else {
+          alert("You're not authorized to join this game.");
+        }
+      })
+  };
+
+  const handleChange = (event) => {
+    setGamePin(event.target.value);
   };
 
   useEffect(() => {
-    axios.get(`https://drz42y1qfl.execute-api.us-east-1.amazonaws.com/test/getgames`)
+    axios.get(`https://8bdevixqj9.execute-api.us-east-1.amazonaws.com/game/get`)
       .then(res => {
         setGames(res.data);
       })
   }, [])
 
+  const handleFilterApply = (selectedCategory, selectedDifficulty) => {
+    axios.get(`https://8bdevixqj9.execute-api.us-east-1.amazonaws.com/game/get`)
+      .then(res => {
+        let filteredGames = [];
+        filteredGames = selectedCategory !== "" ? res.data.filter(game => game.category === selectedCategory) : res.data;
+        filteredGames = selectedDifficulty !== "" ? filteredGames.filter(game => game.difficulty === selectedDifficulty) : filteredGames;
+        console.log("Filtered games: " + JSON.stringify(filteredGames));
+        setGames(filteredGames);
+      })
+  };
+
   return (
     <>
-      <div className='row mx-4'>
-        <div className="col-12">
-          <span style={{ fontSize: '2.5em' }}>
+      <NavBar></NavBar>
+      <div className='row mx-4 mt-4'>
+        <div className="col-3 px-4">
+          <span style={{ fontSize: '2em' }}>
             Game Lobby
           </span>
-          <Logout />
+        </div>
+        <div className="col-1 d-flex filter justify-content-center offset-8">
+          <div className="align-self-center" onClick={toggleFilter} style={{ cursor: "pointer" }}>
+            <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="currentColor" className="bi bi-filter" viewBox="0 0 16 16">
+              <path d="M6 10.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5zm-2-3a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zm-2-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5z" />
+            </svg>
+          </div>
         </div>
       </div>
       <div className="row mx-4" style={{ maxHeight: "90vh", overflow: "scroll" }}>
-        {games?.map(game => <GameCard key={`game_card_` + game.id} id={game.id} title={game.name} category={game.category} timeFrameinMin={game.timeFrame} difficuly={game.difficulty}></GameCard>)}
+        {games?.map(game => <GameCard key={`game_card_` + game.id} id={game.id} title={game.name} category={game.category} timeFrameinMin={(new Date(game.endTime).getTime() > Date.now()) ? new Date(game.endTime).toLocaleString() : 'Expired'} difficuly={game.difficulty} expired={(new Date(game.endTime).getTime() <= Date.now())}></GameCard>)}
       </div>
       <button className='action-button' onClick={() => setShow(true)}>
-        <img src='../assets/team.png' alt="Join Game" height='20' width='20' />
+        <img src={teamImage} alt="Join Game" height='45' width='45' />
       </button>
       <Modal
         size="sm"
@@ -55,15 +95,18 @@ const GameLobby = () => {
                 type="number"
                 id="numberField"
                 name="numberField"
+                value={gamePin}
+                onChange={handleChange}
                 required
               />
               <button type="submit btn btn-outline-dark w-25">Submit</button>
             </div>
           </form>
         </Modal.Body>
-      </Modal >
+      </Modal>
+      {filterVisible && <Filter onApply={handleFilterApply} />}
     </>
   )
 }
 
-export default GameLobby
+export default GameLobby;
