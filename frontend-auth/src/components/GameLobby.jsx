@@ -14,6 +14,10 @@ const GameLobby = () => {
   const [filterVisible, setFilterVisible] = useState(false);
   const navigate = useNavigate();
   const [gamePin, setGamePin] = useState('');
+  const [teamSelectModal, setTeamSelectModal] = useState(true);
+  const [teams, setTeams] = useState([]);
+
+  const fetch_teams_url = "https://us-central1-serverless-391112.cloudfunctions.net/fetch-teams-for-member";
 
   const toggleFilter = () => {
     setFilterVisible(!filterVisible); // Step 2: Function to toggle filter visibility
@@ -43,6 +47,19 @@ const GameLobby = () => {
       .then(res => {
         setGames(res.data);
       })
+      const fetchTeams = async () => {
+          const requestBody = {};
+          requestBody.recipient = JSON.parse(localStorage.getItem("userData")).email;
+
+          try {
+              const responseFetchInvites = await axios.post(fetch_teams_url, requestBody);
+              const responseDataFetchInvites = responseFetchInvites.data;
+              setTeams(responseDataFetchInvites['message'])
+          } catch (error) {
+              console.error(error);
+          }
+      }
+      fetchTeams();
   }, [])
 
   const handleFilterApply = (selectedCategory, selectedDifficulty) => {
@@ -54,6 +71,12 @@ const GameLobby = () => {
         console.log("Filtered games: " + JSON.stringify(filteredGames));
         setGames(filteredGames);
       })
+  };
+
+  const handleTeamSelection = async (teamId, teamName) => {
+    localStorage.setItem("teamId", teamId.toString());
+    localStorage.setItem("teamName", teamName.toString());
+    setTeamSelectModal(false)
   };
 
   return (
@@ -79,6 +102,23 @@ const GameLobby = () => {
       <button className='action-button' onClick={() => setShow(true)}>
         <img src={teamImage} alt="Join Game" height='45' width='45' />
       </button>
+
+        <Modal size="m" show={teamSelectModal}
+               onHide={()=>setTeamSelectModal(false)} aria-labelledby="example-modal-sizes-title-sm">
+            <Modal.Body>
+                <div>
+                    <h2>Select Team to Operate With</h2>
+                    <ul>
+                        {teams.map((team) => (
+                            <li key={team.docId}>
+                                <button onClick={() => handleTeamSelection(team.team_id, team.team_name)}>Play in {team.team_name} team</button>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+            </Modal.Body>
+        </Modal>
+
       <Modal
         size="sm"
         show={modalShow}

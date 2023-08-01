@@ -20,6 +20,15 @@ import {
 import Auth from './Pages/signIn_signUp/auth';
 import Mfa from './Pages/mfa/mfa';
 import { AuthProvider } from './components/authContext';
+import CreateTeam from "./components/teamManagement/CreateTeam";
+import CreateTeamSuccess from "./components/teamManagement/CreateTeamSuccess";
+import InvitationManaged from "./components/teamManagement/InvitationManaged";
+import ManageInvites from "./components/teamManagement/ManageInvites";
+import ViewTeamStats from "./components/teamManagement/ViewTeamStats";
+import RemoveMembers from "./components/teamManagement/RemoveMembers";
+import PromoteToAdmin from "./components/teamManagement/PromoteToAdmin";
+import ManageTeam from "./components/teamManagement/ManageTeam";
+import MemberNotAdmin from "./components/teamManagement/MemberNotAdmin";
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
 const router = createBrowserRouter([
@@ -74,6 +83,42 @@ const router = createBrowserRouter([
   {
     path: "/verifymfa",
     element: <AuthProvider><Mfa></Mfa></AuthProvider>
+  },
+  {
+    path: "/team-management/create-team",
+    element: <CreateTeam><Mfa></Mfa></CreateTeam>
+  },
+  {
+    path: "/team-management/create-team-success",
+    element: <CreateTeamSuccess><Mfa></Mfa></CreateTeamSuccess>
+  },
+  {
+    path: "/team-management/added-to-team",
+    element: <InvitationManaged><Mfa></Mfa></InvitationManaged>
+  },
+  {
+    path: "/team-management/view-invitations",
+    element: <ManageInvites><Mfa></Mfa></ManageInvites>
+  },
+  {
+    path: "/team-management/team-stats",
+    element: <ViewTeamStats><Mfa></Mfa></ViewTeamStats>
+  },
+  {
+    path: "/team-management/remove-member",
+    element: <RemoveMembers><Mfa></Mfa></RemoveMembers>
+  },
+  {
+    path: "/team-management/promote-admin",
+    element: <PromoteToAdmin><Mfa></Mfa></PromoteToAdmin>
+  },
+  {
+    path: "/team-management",
+    element: <ManageTeam><Mfa></Mfa></ManageTeam>
+  },
+  {
+    path: "/team-management/not-admin",
+    element: <MemberNotAdmin><Mfa></Mfa></MemberNotAdmin>
   }
 ]);
 
