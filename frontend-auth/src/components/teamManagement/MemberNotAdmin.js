@@ -4,7 +4,7 @@ import {useNavigate} from "react-router-dom";
 
 const MemberNotAdmin = () => {
 
-    const leave_team_url = "https://us-central1-serverless-391112.cloudfunctions.net/leave-team"
+    const leave_team_url = "https://us-central1-serverless-391112.cloudfunctions.net/leave-team-v2"
     const requestBody = {};
     requestBody.user_id = JSON.parse(localStorage.getItem("userData")).email;
     requestBody.team_id = localStorage.getItem("teamId").toString();
@@ -20,10 +20,9 @@ const MemberNotAdmin = () => {
         navigate("/team-management/create-team");
     }
 
-    const handleLeaveTeam = () => {
-        axios.post(leave_team_url).then(res => {
-            navigate('/game-lobby')
-        });
+    const handleLeaveTeam = async () => {
+        const response = await axios.post(leave_team_url, requestBody);
+        navigate(("/game-lobby"))
     }
 
     return(
