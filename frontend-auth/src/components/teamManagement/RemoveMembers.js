@@ -35,7 +35,7 @@ const RemoveMembers = () => {
         requestAnswerInvite.removedMember = member;
         try{
             await axios.post(remove_members_url, requestAnswerInvite);
-            navigate('/game-lobby'); // TODO: Redirect to TM page
+            navigate('/team-management');
         }catch (error){
             console.error(error);
         }

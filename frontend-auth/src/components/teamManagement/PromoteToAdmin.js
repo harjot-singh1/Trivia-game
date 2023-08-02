@@ -35,7 +35,7 @@ const PromoteToAdmin = () => {
         requestAnswerInvite.newAdminId = member;
         try{
             await axios.post(promote_admin_url, requestAnswerInvite);
-            navigate('/game-lobby'); //TODO: Redirect to TM page
+            navigate('/team-management');
         }catch (error){
             console.error(error);
         }
