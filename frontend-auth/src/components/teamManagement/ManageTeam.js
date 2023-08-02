@@ -3,7 +3,7 @@ import axios from "axios";
 import {useNavigate} from "react-router-dom";
 
 const ManageTeam = () => {
-    const admin_check_url = "https://us-central1-serverless-391112.cloudfunctions.net/is-user-admin"
+    const admin_check_url = "https://us-central1-serverless-391112.cloudfunctions.net/is-user-adminV2"
     const navigate = useNavigate();
 
     const buttons = {

@@ -14,7 +14,8 @@ const GameLobby = () => {
   const [filterVisible, setFilterVisible] = useState(false);
   const navigate = useNavigate();
   const [gamePin, setGamePin] = useState('');
-  const [teamSelectModal, setTeamSelectModal] = useState(true);
+  const [teamSelectModal, setTeamSelectModal] = useState(false);
+  const [noTeamModal, setNoTeamModal] = useState(false)
   const [teams, setTeams] = useState([]);
 
   const fetch_teams_url = "https://us-central1-serverless-391112.cloudfunctions.net/fetch-teams-for-member";
@@ -55,6 +56,14 @@ const GameLobby = () => {
               const responseFetchInvites = await axios.post(fetch_teams_url, requestBody);
               const responseDataFetchInvites = responseFetchInvites.data;
               setTeams(responseDataFetchInvites['message'])
+              const responseTeams = responseDataFetchInvites['message']
+              console.log(responseTeams.length)
+              if(responseTeams.length > 0){
+                  setTeamSelectModal(true);
+              }
+              else{
+                  setNoTeamModal(true);
+              }
           } catch (error) {
               console.error(error);
           }
@@ -78,6 +87,10 @@ const GameLobby = () => {
     localStorage.setItem("teamName", teamName.toString());
     setTeamSelectModal(false)
   };
+
+    const handleCreateNewTeam = () => {
+        navigate("/team-management/create-team");
+    }
 
   return (
     <>
@@ -115,6 +128,16 @@ const GameLobby = () => {
                             </li>
                         ))}
                     </ul>
+                </div>
+            </Modal.Body>
+        </Modal>
+
+        <Modal size="m" show={noTeamModal}
+               onHide={()=>setNoTeamModal(false)} aria-labelledby="example-modal-sizes-title-sm">
+            <Modal.Body>
+                <div>
+                    <h2>You are not part of any team. Please create a new team</h2>
+                    <button onClick={handleCreateNewTeam}>Create New Team</button>
                 </div>
             </Modal.Body>
         </Modal>
