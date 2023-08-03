@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 // import AWS from 'aws-sdk';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 // AWS.config.update({
 //   accessKeyId: 'ASIAQHWNM2YMROFGHF4W',
@@ -20,6 +21,7 @@ const Ingame = () => {
   const [timeRemaining, setTimeRemaining] = useState(30);
   const { id, gameid } = useParams();
   const teamId = id;
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -125,8 +127,8 @@ const Ingame = () => {
     const team = teamId;
     const isAnswerCorrect = currentQuestion.answer === parseInt(selectedOption);
     let response = [];
-      response = await callFetchLambda(team);
-    
+    response = await callFetchLambda(team);
+
 
     const updatedTeamScores = {
       ...teamScores,
@@ -140,8 +142,8 @@ const Ingame = () => {
     const lastQuestionAnswered = response.lastQuestionAnswered || currentQuestionIndex + 1;
     Object.entries(updatedTeamScores).forEach(([team, score]) => (realtimescore = score));
 
-      callLambdaFunction(team, realtimescore, lastQuestionAnswered);
-    
+    callLambdaFunction(team, realtimescore, lastQuestionAnswered);
+
 
     setTimeout(() => {
       if (currentQuestionIndex === questions.length - 1) {
@@ -155,6 +157,7 @@ const Ingame = () => {
         axios.post(apiUrl, payload)
           .then((response) => {
             console.log('Data inserted successfully:', response.data);
+            navigate("/game-lobby");
           })
           .catch((error) => {
             console.error('Error calling the API:', error);
