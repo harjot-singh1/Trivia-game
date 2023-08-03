@@ -1,7 +1,7 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
-import {useNavigate} from "react-router-dom";
-
+import { useNavigate } from "react-router-dom";
+import NavBar from "../NavBar";
 const PromoteToAdmin = () => {
     const fetch_members_url = "https://us-central1-serverless-391112.cloudfunctions.net/fetch-admin-team";
     const promote_admin_url = "https://us-central1-serverless-391112.cloudfunctions.net/promote-to-admin";
@@ -33,16 +33,17 @@ const PromoteToAdmin = () => {
         const requestAnswerInvite = {};
         requestAnswerInvite.docId = docId;
         requestAnswerInvite.newAdminId = member;
-        try{
+        try {
             await axios.post(promote_admin_url, requestAnswerInvite);
-            navigate('/game-lobby'); //TODO: Redirect to TM page
-        }catch (error){
+            navigate('/team-management');
+        } catch (error) {
             console.error(error);
         }
     };
 
-    return(
+    return (
         <div>
+            <NavBar></NavBar>
             <h2>Members in Admin's Team</h2>
             <ul>
                 {members.map((member) => (

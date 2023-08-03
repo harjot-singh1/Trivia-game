@@ -1,9 +1,9 @@
-import React, {useEffect} from "react";
+import React, { useEffect } from "react";
 import axios from "axios";
-import {useNavigate} from "react-router-dom";
-
+import { useNavigate } from "react-router-dom";
+import NavBar from "../NavBar";
 const ManageTeam = () => {
-    const admin_check_url = "https://us-central1-serverless-391112.cloudfunctions.net/is-user-admin"
+    const admin_check_url = "https://us-central1-serverless-391112.cloudfunctions.net/is-user-adminV2"
     const navigate = useNavigate();
 
     const buttons = {
@@ -11,13 +11,13 @@ const ManageTeam = () => {
         flexDirection: 'column',
     };
 
-    useEffect(()=>{
+    useEffect(() => {
         const checkAdmin = async () => {
             const requestBody = {}
             requestBody.user_id = JSON.parse(localStorage.getItem("userData")).email;
             requestBody.team_id = localStorage.getItem("teamId").toString();
             const response = await axios.post(admin_check_url, requestBody)
-            if (response.data['flag'] === 1){
+            if (response.data['flag'] === 1) {
                 navigate('/team-management/not-admin')
             }
         }
@@ -40,8 +40,9 @@ const ManageTeam = () => {
         navigate("/team-management/create-team");
     }
 
-    return(
+    return (
         <div>
+            <NavBar></NavBar>
             <h2>
                 Team Management Deck
             </h2>

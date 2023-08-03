@@ -1,35 +1,38 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
-import AdminHomeScreen from './admin/screens/AdminHomeScreen'
-import AdminCategoryScreen from './admin/screens/AdminCategoryScreen'
-import AdminQuestionScreen from './admin/screens/AdminQuestionScreen'
-import AdminGameScreen from './admin/screens/AdminGameScreen'
-import LeaderboardScreen from './Pages/LeaderboardScreen';
-import GameLobby from './components/GameLobby';
+import AdminCategoryScreen from './admin/screens/AdminCategoryScreen';
+import AdminGameScreen from './admin/screens/AdminGameScreen';
+import AdminHomeScreen from './admin/screens/AdminHomeScreen';
+import AdminQuestionScreen from './admin/screens/AdminQuestionScreen';
 import GameDetails from './components/GameDetails';
+import GameLobby from './components/GameLobby';
 import WaiitingRoom from './components/WaitingRoom';
+import './index.css';
+import LeaderboardScreen from './Pages/LeaderboardScreen';
+import reportWebVitals from './reportWebVitals';
 import Ingame from './components/ingame';
 
 import {
   createBrowserRouter,
   RouterProvider,
-} from "react-router-dom"
+} from "react-router-dom";
 
-import Auth from './Pages/signIn_signUp/auth';
-import Mfa from './Pages/mfa/mfa';
 import { AuthProvider } from './components/authContext';
 import CreateTeam from "./components/teamManagement/CreateTeam";
 import CreateTeamSuccess from "./components/teamManagement/CreateTeamSuccess";
 import InvitationManaged from "./components/teamManagement/InvitationManaged";
 import ManageInvites from "./components/teamManagement/ManageInvites";
-import ViewTeamStats from "./components/teamManagement/ViewTeamStats";
-import RemoveMembers from "./components/teamManagement/RemoveMembers";
-import PromoteToAdmin from "./components/teamManagement/PromoteToAdmin";
 import ManageTeam from "./components/teamManagement/ManageTeam";
 import MemberNotAdmin from "./components/teamManagement/MemberNotAdmin";
+import PromoteToAdmin from "./components/teamManagement/PromoteToAdmin";
+import RemoveMembers from "./components/teamManagement/RemoveMembers";
+import ViewTeamStats from "./components/teamManagement/ViewTeamStats";
+import Mfa from './Pages/mfa/mfa';
+import Profile from './Pages/Profile/Profile';
+import UserStats from './Pages/userStats/userStats';
+import Auth from './Pages/signIn_signUp/auth';
+import 'bootstrap/dist/css/bootstrap.min.css'
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
 const router = createBrowserRouter([
@@ -91,39 +94,47 @@ const router = createBrowserRouter([
   },
   {
     path: "/team-management/create-team",
-    element: <CreateTeam><Mfa></Mfa></CreateTeam>
+    element: <AuthProvider><CreateTeam></CreateTeam></AuthProvider>
   },
   {
     path: "/team-management/create-team-success",
-    element: <CreateTeamSuccess><Mfa></Mfa></CreateTeamSuccess>
+    element: <AuthProvider><CreateTeamSuccess></CreateTeamSuccess></AuthProvider>
   },
   {
     path: "/team-management/added-to-team",
-    element: <InvitationManaged><Mfa></Mfa></InvitationManaged>
+    element: <AuthProvider><InvitationManaged></InvitationManaged></AuthProvider>
   },
   {
     path: "/team-management/view-invitations",
-    element: <ManageInvites><Mfa></Mfa></ManageInvites>
+    element: <AuthProvider><ManageInvites></ManageInvites></AuthProvider>
   },
   {
     path: "/team-management/team-stats",
-    element: <ViewTeamStats><Mfa></Mfa></ViewTeamStats>
+    element: <AuthProvider><ViewTeamStats></ViewTeamStats></AuthProvider>
   },
   {
     path: "/team-management/remove-member",
-    element: <RemoveMembers><Mfa></Mfa></RemoveMembers>
+    element: <AuthProvider><RemoveMembers></RemoveMembers></AuthProvider>
   },
   {
     path: "/team-management/promote-admin",
-    element: <PromoteToAdmin><Mfa></Mfa></PromoteToAdmin>
+    element: <AuthProvider><PromoteToAdmin></PromoteToAdmin></AuthProvider>
   },
   {
     path: "/team-management",
-    element: <ManageTeam><Mfa></Mfa></ManageTeam>
+    element: <AuthProvider><ManageTeam></ManageTeam></AuthProvider>
   },
   {
     path: "/team-management/not-admin",
-    element: <MemberNotAdmin><Mfa></Mfa></MemberNotAdmin>
+    element: <AuthProvider><MemberNotAdmin></MemberNotAdmin></AuthProvider>
+  },
+  {
+    path: "/profile",
+    element: <AuthProvider><Profile></Profile></AuthProvider>
+  },
+  {
+    path: "/userstats",
+    element: <AuthProvider><UserStats></UserStats></AuthProvider>
   }
 ]);
 

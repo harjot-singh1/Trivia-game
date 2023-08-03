@@ -1,7 +1,7 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
-import {useNavigate} from "react-router-dom";
-
+import { useNavigate } from "react-router-dom";
+import NavBar from "../NavBar";
 const ManageInvites = () => {
     const recipientId = JSON.parse(localStorage.getItem("userData")).email;
     const fetch_invites_url = "https://us-central1-serverless-391112.cloudfunctions.net/get-pending-invites";
@@ -31,10 +31,10 @@ const ManageInvites = () => {
         const requestAnswerInvite = {};
         requestAnswerInvite.docId = docId;
         requestAnswerInvite.status = 1;
-        try{
+        try {
             await axios.post(answer_invite_url, requestAnswerInvite);
-            navigate('/team-management/added-to-team', {state:{teamName:teamName}});
-        }catch (error){
+            navigate('/team-management/added-to-team', { state: { teamName: teamName } });
+        } catch (error) {
             console.error(error);
         }
     };
@@ -43,16 +43,17 @@ const ManageInvites = () => {
         const requestAnswerInvite = {};
         requestAnswerInvite.docId = docId;
         requestAnswerInvite.status = 2;
-        try{
+        try {
             await axios.post(answer_invite_url, requestAnswerInvite);
             navigate('/game-lobby');
-        }catch (error){
+        } catch (error) {
             console.error(error);
         }
     };
 
-    return(
+    return (
         <div>
+            <NavBar></NavBar>
             <h2>Pending Invitations</h2>
             <ul>
                 {invitations.map((invitation) => (
