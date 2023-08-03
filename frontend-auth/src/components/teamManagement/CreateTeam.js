@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
 import axios from 'axios';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-
+import NavBar from '../NavBar';
 
 const CreateTeam = () => {
 
@@ -30,12 +30,12 @@ const CreateTeam = () => {
         requestBody.senderId = JSON.parse(localStorage.getItem("userData")).email;
         console.log(requestBody);
 
-        try{
+        try {
             const response = await axios.post(create_new_team_url, requestBody);
 
             const responseData = response.data;
-            navigate('/team-management/create-team-success', {state:{message:responseData['message'], teamName:responseData['team_name']}});
-        } catch (error){
+            navigate('/team-management/create-team-success', { state: { message: responseData['message'], teamName: responseData['team_name'] } });
+        } catch (error) {
             console.error(error);
         }
 
@@ -44,6 +44,7 @@ const CreateTeam = () => {
 
     return (
         <div>
+            <NavBar></NavBar>
             <h1>Create New Team</h1>
             <form onSubmit={handleSubmit}>
                 {teamMemberId.map((memberId, index) => (
