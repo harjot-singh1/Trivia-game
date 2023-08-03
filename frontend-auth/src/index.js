@@ -10,6 +10,7 @@ import WaiitingRoom from './components/WaitingRoom';
 import './index.css';
 import LeaderboardScreen from './Pages/LeaderboardScreen';
 import reportWebVitals from './reportWebVitals';
+import Ingame from './components/ingame';
 
 import {
   createBrowserRouter,
@@ -44,8 +45,12 @@ const router = createBrowserRouter([
     element: <AuthProvider><GameLobby /></AuthProvider>
   },
   {
-    path: "/waiting-room/:id",
+    path: "/waiting-room/:id/:gameid",
     element: <AuthProvider><WaiitingRoom /></AuthProvider>
+  },
+  {
+    path: "/ingame/:id/:gameid",
+    element: <AuthProvider><Ingame /></AuthProvider>
   },
   {
     path: "/game-details/:id",

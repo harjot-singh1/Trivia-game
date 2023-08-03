@@ -2,10 +2,11 @@ import axios from 'axios';
 import { default as React } from 'react';
 import { Link } from 'react-router-dom';
 import './GameCard.css';
+import { useNavigate } from 'react-router-dom';
 
 
 const GameCard = ({ id, title, category, timeFrameinMin, difficuly, expired }) => {
-
+    const navigate = useNavigate();
     let borderColor;
 
     switch (difficuly) {
@@ -31,6 +32,7 @@ const GameCard = ({ id, title, category, timeFrameinMin, difficuly, expired }) =
                     instanceId: instanceId
                 });
                 console.log("invitation-response:: " + invitationResponse);
+                navigate(`/waiting-room/${instanceId}/${gameId}`);
             } else {
                 console.error("Something is broken, please try again later")
             }
