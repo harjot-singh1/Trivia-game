@@ -10,7 +10,11 @@ const Mfa = () => {
     const location = useLocation();
     const navigate = useNavigate();
 
-    const ques = ["Where is your home town?", "What is month of your birth?", "Which is your favourite destination country?"];
+    const ques = [
+        "Where is your home town?",
+        "What is month of your birth?",
+        "Which is your favourite destination country?",
+    ];
     const ans = ["", "", ""];
     const [url, setUrl] = useState(location.pathname);
 
@@ -26,42 +30,70 @@ const Mfa = () => {
         const userData = JSON.parse(window.localStorage.getItem("userData"));
         let data = {
             email: userData?.email,
-        }
+        };
         event.preventDefault();
         if (data.email) {
             if (url === "/createmfa") {
-
                 for (let i = 0; i < 3; i++) {
                     data[ques[i]] = ans[i];
                 }
-                const url = `${hostName}/add-mfa`;
-                axios.post(url, data).then((res) => {
-                    alert("mfa creation successfull");
-                    navigate("/login");
-                }).catch((error) => {
-                    alert(error);
-                });
+                axios
+                    .post(
+                        "https://qiuc1xjkaj.execute-api.us-east-1.amazonaws.com/dev/user/profile",
+                        { "email": data.email, "name": "", "age": "", "gender": "", "phoneNumber": "", "profile_picture": "" }
+                    )
+                    .then((response) => {
 
+                    })
+                    .catch((error) => {
+                        console.error("Error saving profile data:", error);
+                    });
+                const url = `${hostName}/add-mfa`;
+                axios
+                    .post(url, data)
+                    .then((res) => {
+                        alert("mfa creation successfull");
+                        navigate("/login");
+                    })
+                    .catch((error) => {
+                        alert(error);
+                    });
             } else {
                 data[ques[index]] = ans[index];
-                axios.post(`${hostName}/verify-mfa`, data).then((res) => {
-                    setIsAuthenticated(true);
-                    var user = JSON.parse(window.localStorage.getItem("userData"))
-                    if(user.email == "kadivarnand007@gmail.com"){
-                        navigate("/admin/home");
-                    }else {
-                        navigate("/game-lobby");
-                    }
-                }).catch((error) => {
-                    alert(error);
-                })
+                axios
+                    .post(`${hostName}/verify-mfa`, data)
+                    .then((res) => {
+                        setIsAuthenticated(true);
+                        axios
+                            .get(
+                                "https://qiuc1xjkaj.execute-api.us-east-1.amazonaws.com/dev/user/profile?email=" +
+                                userData.email
+                            )
+                            .then((res) => {
+                                var user = JSON.parse(window.localStorage.getItem("userData"));
+                                if (user.email == "kadivarnand007@gmail.com") {
+                                    navigate("/admin/home");
+                                } else {
+                                    navigate("/game-lobby");
+                                }
+                            })
+                            .catch((error) => {
+                                if (error.response.status === 404) {
+                                    navigate("/profile");
+                                } else {
+                                    alert("error while fetching data");
+                                }
+                            });
+                    })
+                    .catch((error) => {
+                        alert(error);
+                    });
             }
         } else {
             alert("error while locating userData");
             setIsAuthenticated(false);
         }
-
-    }
+    };
 
     return (
         <div className="container-fluid mfa-container">
@@ -117,7 +149,7 @@ const Mfa = () => {
                 </div>
             </div>
         </div>
-    )
-}
+    );
+};
 
 export default Mfa;
