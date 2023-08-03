@@ -17,6 +17,7 @@ const NavBar = () => {
                     <div className='d-flex'>
                         <Link to={'/userstats'} className="nav-link text-white mx-3"><i className="fas fa-cog mx-1"></i>Stats</Link>
                         <Link to={'/team-management/view-invitations'} className="nav-link text-white mx-3"><i className="fas fa-cog mx-1"></i>Invites</Link>
+                        <Link to={'/leaderboard'} className="nav-link text-white mx-3"><i className="fas fa-cog mx-1"></i>Leaderboard</Link>
                         <Link to={'/team-management' + whereToNavigateForTeam()} className="nav-link text-white mx-3"><i className="fas fa-cog mx-1"></i> {currentTeam() || "Create Team"} </Link>
                         <Link to={'/profile'} className="nav-link text-white mx-3"><i className="fas fa-cog mx-1"></i> {loggedInUser()} </Link>
                         <Logout />
