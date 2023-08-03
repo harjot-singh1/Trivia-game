@@ -32,6 +32,7 @@ const AdminGameScreen = () => {
   const [newDifficultyLevel,setNewDifficultyLevel] = useState("easy")
   const [newDescription,setNewDescription] = useState("")
   const [startTime,setStartTime] = useState("")
+  const [duration,setDuration] = useState("")
   const [endTime,setEndTime] = useState("")
   const [selectedId,setSelectedId] = useState(0)
   const [selectedCreatedAt,setSelectedCreatedAt] = useState("")
@@ -67,6 +68,7 @@ const AdminGameScreen = () => {
       setNewDifficultyLevel(item.difficulty)
       setNewDescription(item.description)
       setStartTime(item.startTime)
+      setDuration(item.duration)
       setEndTime(item.endTime)
       var filtered_question_list = []
       questions.forEach((question)=>{
@@ -89,6 +91,7 @@ const AdminGameScreen = () => {
       setNewGameName("")
       setSelectedCreatedAt("")
       setStartTime("")
+      setDuration("")
       setEndTime("")
       setSelectedCreatedAt("")
       setNewDescription("")
@@ -113,6 +116,7 @@ const AdminGameScreen = () => {
           description: newDescription,
           startTime: startTime,
           endTime: endTime,
+          duration: duration,
           createdAt: new Date(),
           updatedAt: new Date()
         }
@@ -150,6 +154,7 @@ const AdminGameScreen = () => {
           difficulty: newDifficultyLevel,
           description: newDescription,
           startTime: startTime,
+          duration: duration,
           endTime: endTime,
           createdAt: selectedCreatedAt,
           updatedAt: new Date()
@@ -220,6 +225,10 @@ const AdminGameScreen = () => {
     })
   },[])
 
+  const getAutomatedTag = () => {
+    axios.get()
+  }
+
   return (
     <>
       <Header />
@@ -266,6 +275,9 @@ const AdminGameScreen = () => {
                     Description: {game.description}
                   </div>
                 }
+                <div className='mt-2 col-12 d-flex align-items-start justify-content-start'> 
+                  Duration: {game.duration}
+                </div>
                 <div className='mt-2 col-12 d-flex align-items-start justify-content-start'> 
                   Start Time: {game.startTime}
                 </div>
@@ -356,6 +368,10 @@ const AdminGameScreen = () => {
               <textarea className='m-1 p-1' value={newDescription} onChange={(e)=>setNewDescription(e.target.value)}></textarea>
             </div>
             <div className='mt-2'>
+              <label>Duration: </label>
+              <input className='m-1 p-1' placeholder='duration in minutes' type="number" value={duration} onChange={(e)=>setDuration(e.target.value)} />
+            </div>
+            <div className='mt-2'>
               <label>Start Time: </label>
               <input className='m-1 p-1' type="datetime-local" value={startTime} onChange={(e)=>setStartTime(e.target.value)} />
             </div>
@@ -439,6 +455,10 @@ const AdminGameScreen = () => {
             <div className='mt-2 d-flex'>
               <label>Description: </label>
               <textarea className='m-1 p-1' value={newDescription} onChange={(e)=>setNewDescription(e.target.value)}></textarea>
+            </div>
+            <div className='mt-2'>
+              <label>Duration: </label>
+              <input className='m-1 p-1' placeholder='duration in minutes' type="number" value={duration} onChange={(e)=>setDuration(e.target.value)} />
             </div>
             <div className='mt-2'>
               <label>Start Time: </label>
