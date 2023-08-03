@@ -82,13 +82,13 @@ const WaitingRoom = () => {
     }, [gameid]);
 
     useEffect(() => {
-        if (startTime) {
+        if (startTime && gameid) {
             const timer = setInterval(() => {
                 console.log("Inside timer");
                 if (Date.now() >= startTime) {
                     console.log(Date.now());
                     console.log(startTime);
-                    navigate("/ingame/" + id);
+                    navigate("/ingame/" + id + "/" + gameid);
                     clearInterval(timer);
                 }
             }, 1000);
@@ -97,7 +97,7 @@ const WaitingRoom = () => {
                 clearInterval(timer);
             };
         }
-    }, [startTime, id, navigate]);
+    }, [startTime, id, gameid, navigate]);
 
     return (
         <>

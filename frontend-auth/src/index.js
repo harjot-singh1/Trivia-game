@@ -46,7 +46,7 @@ const router = createBrowserRouter([
     element: <AuthProvider><WaiitingRoom /></AuthProvider>
   },
   {
-    path: "/ingame/:id",
+    path: "/ingame/:id/:gameid",
     element: <AuthProvider><Ingame /></AuthProvider>
   },
   {

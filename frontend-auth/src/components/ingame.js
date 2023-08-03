@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 // import AWS from 'aws-sdk';
-const axios = require('axios');
+import axios from 'axios';
 
 // AWS.config.update({
 //   accessKeyId: 'ASIAQHWNM2YMROFGHF4W',
@@ -18,24 +18,18 @@ const Ingame = () => {
   const [showAnswer, setShowAnswer] = useState(false);
   const [teamScores, setTeamScores] = useState({});
   const [timeRemaining, setTimeRemaining] = useState(30);
-  const { teamId } = useParams();
-  //const teamId = 'Team 1';
-  let isInsertDone = false;
+  const { id, gameid } = useParams();
+  const teamId = id;
 
   useEffect(() => {
     const fetchData = async () => {
-      try {
-        const response = await fetch('https://8bdevixqj9.execute-api.us-east-1.amazonaws.com/question/get');
-        const jsonData = await response.json();
-        // const jsonData = [
-        //   { "question": "Sample question on math??", "subCategory": "Maths", "updatedAt": "2023-07-26T21:54:30.974Z", "category": "Science", "createdAt": "2023-07-14T01:06:03.439Z", "options": ["option a", "option b", "option c", "option d"], "difficulty": "medium", "id": 2544, "answer": 3, "explanation": "Explanation of answer" },
-        //   { "question": "History question again??", "subCategory": "Social History", "updatedAt": "2023-07-26T18:21:03.154Z", "category": "History", "createdAt": "2023-07-23T20:18:16.692Z", "options": ["Yes", "No"], "difficulty": "medium", "id": 4982, "answer": 0, "explanation": "It is not \"Yes\"" },
-        //   { "question": "Question on history?", "subCategory": "Economic History", "updatedAt": "2023-07-23T20:14:56.879Z", "category": "History", "createdAt": "2023-07-23T20:14:56.879Z", "options": ["abc", "xyz", "pqr", "lmn"], "difficulty": "medium", "id": 7846, "answer": 1, "explanation": "It is what it is" }
-        // ];
-        setQuestions(jsonData);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
+      axios.get(`https://8bdevixqj9.execute-api.us-east-1.amazonaws.com/game/get?id=${gameid}`)
+        .then((response) => {
+          debugger
+          const jsonData = response.data;
+          console.log(jsonData);
+          setQuestions(jsonData.questions);
+        })
     };
 
     fetchData();
@@ -69,10 +63,9 @@ const Ingame = () => {
     try {
       const response = await axios.post(url, payload);
       console.log('Lambda function invoked successfully:', response.data);
-      isInsertDone = true;
     } catch (error) {
       console.error('Error invoking Lambda function:', error);
-      
+
     }
   }
 
@@ -84,7 +77,6 @@ const Ingame = () => {
     try {
       const response = await axios.post(url, payload);
       console.log('Lambda function invoked successfully:', response.data);
-      isInsertDone = true;
       return response.data.body;
     } catch (error) {
       console.error('Error invoking Lambda function:', error);
@@ -133,10 +125,9 @@ const Ingame = () => {
     const team = teamId;
     const isAnswerCorrect = currentQuestion.answer === parseInt(selectedOption);
     let response = [];
-    if(!isInsertDone){
-          response = await callFetchLambda(team);
-    }
+      response = await callFetchLambda(team);
     
+
     const updatedTeamScores = {
       ...teamScores,
       [team]: (teamScores[team] || 0) + (isAnswerCorrect ? 1 : 0),
@@ -149,10 +140,9 @@ const Ingame = () => {
     const lastQuestionAnswered = response.lastQuestionAnswered || currentQuestionIndex + 1;
     Object.entries(updatedTeamScores).forEach(([team, score]) => (realtimescore = score));
 
-    if(!isInsertDone){
       callLambdaFunction(team, realtimescore, lastQuestionAnswered);
-    }
     
+
     setTimeout(() => {
       if (currentQuestionIndex === questions.length - 1) {
         // All questions answered, call the API to update game status
@@ -170,7 +160,7 @@ const Ingame = () => {
             console.error('Error calling the API:', error);
           });
       }
-      let nextQuestionIndexToShow = lastQuestionAnswered;      
+      let nextQuestionIndexToShow = lastQuestionAnswered;
       setCurrentQuestionIndex(nextQuestionIndexToShow);
       setNextQuestionIndex(nextQuestionIndexToShow + 1);
       setSelectedOption('');
