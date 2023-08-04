@@ -28,7 +28,7 @@ const GameLobby = () => {
     event.preventDefault();
     axios.post(`https://drz42y1qfl.execute-api.us-east-1.amazonaws.com/test/joinGame/checkAllowance`, {
       userId: JSON.parse(localStorage.getItem("userData")).email,
-      instanceId: gamePin
+      instanceId: gamePin.split("-")[0]
     })
       .then(res => {
         if (res?.data?.allowed) {
