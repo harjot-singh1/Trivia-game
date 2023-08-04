@@ -11,6 +11,7 @@ import './index.css';
 import LeaderboardScreen from './Pages/LeaderboardScreen';
 import reportWebVitals from './reportWebVitals';
 import Ingame from './components/ingame';
+import Chatbox from './components/Chatbox';
 
 import {
   createBrowserRouter,
@@ -135,6 +136,10 @@ const router = createBrowserRouter([
   {
     path: "/userstats",
     element: <AuthProvider><UserStats></UserStats></AuthProvider>
+  },
+  {
+    path: "/chat",
+    element: <AuthProvider><Chatbox></Chatbox></AuthProvider>
   }
 ]);
 
