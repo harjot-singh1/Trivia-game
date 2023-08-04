@@ -91,8 +91,7 @@ const Ingame = () => {
     console.log(response);
     if (response) {
       const jsonRes = JSON.parse(response);
-      if (jsonRes && jsonRes.lastQuestionAnswered !== undefined) {
-        setLastQuestionAnswered(jsonRes.lastQuestionAnswered);
+      if (jsonRes && jsonRes.lastQuestionAnswered !== undefined && jsonRes.lastQuestionAnswered === currentQuestionIndex) {
         handleNextQuestion();
       } else {
         // Set lastQuestionAnswered to 0 if there is no data in the response
