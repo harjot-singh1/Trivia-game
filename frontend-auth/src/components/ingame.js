@@ -106,7 +106,7 @@ const Ingame = () => {
       (async () => {
         await pollData();
       })();
-    }, 1000);
+    }, 2000);
     return () => clearInterval(intervalId);
   }, []);
 
@@ -161,32 +161,35 @@ const Ingame = () => {
       const lastQuestionAnswered = currentQuestionIndexRef.current + 1;
       Object.entries(updatedTeamScores).forEach(([team, score]) => (realtimescore = score));
       callLambdaFunction(team, realtimescore, lastQuestionAnswered);
-      setTimeout(() => {
-        if (currentQuestionIndexRef.current === questions.length - 1) {
-          // All questions answered, call the API to update game status
-          const apiUrl = 'https://drz42y1qfl.execute-api.us-east-1.amazonaws.com/test/updategamestatus';
-          const payload = {
-            instanceId: team,
-            score: realtimescore,
-            lastQuestionAnswered: lastQuestionAnswered,
-          };
-          axios.post(apiUrl, payload)
-            .then((response) => {
-              console.log('Data inserted successfully:', response.data);
-              navigate("/game-lobby");
-            })
-            .catch((error) => {
-              console.error('Error calling the API:', error);
-            });
-        }
-      }, 2000);
+      // setTimeout(() => {
+      //   if (currentQuestionIndexRef.current === questions.length - 1) {
+      //     // All questions answered, call the API to update game status
+      //     const apiUrl = 'https://drz42y1qfl.execute-api.us-east-1.amazonaws.com/test/updategamestatus';
+      //     const payload = {
+      //       instanceId: team,
+      //       score: realtimescore,
+      //       lastQuestionAnswered: lastQuestionAnswered,
+      //     };
+      //     axios.post(apiUrl, payload)
+      //       .then((response) => {
+      //         console.log('Data inserted successfully:', response.data);
+      //         navigate("/game-lobby");
+      //       })
+      //       .catch((error) => {
+      //         console.error('Error calling the API:', error);
+      //       });
+      //   }
+      // }, 2000);
+      
     }
-    let nextQuestionIndexToShow = lastQuestionAnsweredRef.current;
-    currentQuestionIndexRef.current = (nextQuestionIndexToShow);
-    setNextQuestionIndex(nextQuestionIndexToShow + 1);
-    setSelectedOption('');
-    setTimeRemaining(30);
-    setShowAnswer(false);
+    setTimeout(() => {
+      setShowAnswer(false);
+      let nextQuestionIndexToShow = lastQuestionAnsweredRef.current;
+      currentQuestionIndexRef.current = (nextQuestionIndexToShow);
+      setNextQuestionIndex(nextQuestionIndexToShow + 1);
+      setSelectedOption('');
+      setTimeRemaining(30);
+    }, 2000);
   };
 
 
