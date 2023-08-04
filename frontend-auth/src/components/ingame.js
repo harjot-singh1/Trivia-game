@@ -88,6 +88,7 @@ const Ingame = () => {
   const pollData = async () => {
     console.log("polling:" + Date.now());
     const response = await callFetchLambda(teamId);
+    console.log(response);
     if (response && response.lastQuestionAnswered !== undefined) {
       setLastQuestionAnswered(response.lastQuestionAnswered);
       handleNextQuestion();
@@ -145,6 +146,7 @@ const Ingame = () => {
   // };
 
   const handleNextQuestion = async () => {
+    console.log("next question triggered");
     const currentQuestion = questions[currentQuestionIndex];
     const team = teamId;
     const isAnswerCorrect = currentQuestion.answer === parseInt(selectedOption);
