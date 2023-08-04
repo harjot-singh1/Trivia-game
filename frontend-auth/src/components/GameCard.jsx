@@ -32,7 +32,8 @@ const GameCard = ({ id, title, category, timeFrameinMin, difficuly, expired }) =
                     userId: localStorage.getItem('loggedInUserId') || 'madanmayank5@gmail.com',
                     instanceId: instanceId,
                     teamId: teamId,
-                    teamName: localStorage.getItem("teamName") || ""
+                    teamName: localStorage.getItem("teamName") || "",
+                    gameId: gameId
                 });
                 console.log("invitation-response:: " + invitationResponse);
                 navigate(`/waiting-room/${instanceId}/${gameId}`);
