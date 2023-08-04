@@ -5,73 +5,23 @@ import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 
 const WaitingRoom = () => {
-    const teams = [
-        {
-            id: 1,
-            name: "Galactic Guardians"
-        },
-        {
-            id: 2,
-            name: "Stealth Serpents"
-        },
-        {
-            id: 3,
-            name: "Lunar Wolves"
-        },
-        {
-            id: 4,
-            name: "Phoenix Rising"
-        },
-        {
-            id: 5,
-            name: "Thunder Titans"
-        },
-        {
-            id: 6,
-            name: "Mystic Mermaids"
-        },
-        {
-            id: 7,
-            name: "Gravity Grapplers"
-        },
-        {
-            id: 8,
-            name: "Savage Sabertooths"
-        },
-        {
-            id: 9,
-            name: "Astral Avengers"
-        },
-        {
-            id: 10,
-            name: "Neon Ninjas"
-        },
-        {
-            id: 11,
-            name: "Cyber Centurions"
-        },
-        {
-            id: 12,
-            name: "Inferno Inquisitors"
-        },
-        {
-            id: 13,
-            name: "Emerald Enchanters"
-        },
-        {
-            id: 14,
-            name: "Venomous Vipers"
-        },
-        {
-            id: 15,
-            name: "Aurora Arrows"
-        }
-    ];
+    const [teams, setTeams] = useState([]);
     const navigate = useNavigate();
     const { id, gameid } = useParams();
     const [startTime, setStartTime] = useState(null);
 
     useEffect(() => {
+        axios.get(`https://drz42y1qfl.execute-api.us-east-1.amazonaws.com/test/getparticipants?gameId=` + gameid)
+            .then(res1 => {
+                const flattedIds = res1.data.flatMap(item => item.id);
+                axios.post(`https://us-central1-serverless-391112.cloudfunctions.net/get-all-teams`, {})
+                    .then(res => {
+                        if (res?.data?.data) {
+                            setTeams(res.data.data.filter(team => flattedIds.includes(team.team_id)));
+                        }
+                    });
+            });
+
         axios.get(`https://8bdevixqj9.execute-api.us-east-1.amazonaws.com/game/get`)
             .then(res => {
                 const game = res.data.find(game => game.id == gameid);
@@ -110,7 +60,7 @@ const WaitingRoom = () => {
                 </div>
                 <div className="row text-center">
                     <div className="col-10 offset-1 members-list">
-                        {teams.map(member => <span key={member.id} className='mx-1 my-2 d-inline-block px-2 py-1 text-center member-name'> {member.name}</span>)}
+                        {teams.map(member => <span key={member.team_id} className='mx-1 my-2 d-inline-block px-2 py-1 text-center member-name'> {member.team_name}</span>)}
                     </div>
                 </div>
                 <div className="row d-flex justify-content-center my-5">
