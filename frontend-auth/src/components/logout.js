@@ -23,6 +23,7 @@ const Logout = () => {
                 }
             }).then((res) => {
                 window.localStorage.removeItem("userData");
+                window.localStorage.clear();
                 setIsAuthenticated(false);
                 navigate("/login");
             }).catch((error) => {

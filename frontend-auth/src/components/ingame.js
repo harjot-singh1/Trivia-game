@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import AWS from 'aws-sdk';
 import axios from 'axios';
@@ -12,8 +12,10 @@ AWS.config.update({
 });
 
 const Ingame = () => {
+  const lastQuestionAnsweredRef = useRef(0); // Create a mutable reference
+  const currentQuestionIndexRef = useRef(0); // Create a mutable reference
   const [questions, setQuestions] = useState([]);
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  // const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [nextQuestionIndex, setNextQuestionIndex] = useState(1);
   const [selectedOption, setSelectedOption] = useState('');
   const [showAnswer, setShowAnswer] = useState(false);
@@ -22,7 +24,7 @@ const Ingame = () => {
   const { id, gameid } = useParams();
   const teamId = id;
   const navigate = useNavigate();
-  const [lastQuestionAnswered, setLastQuestionAnswered] = useState(0);
+  // const [lastQuestionAnswered, setLastQuestionAnswered] = useState(0);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -60,7 +62,7 @@ const Ingame = () => {
     const payload = {
       instanceId: team,
       score: score,
-      lastQuestionAnswered: lastQuestionAnswered
+      lastQuestionAnswered: currentQuestionIndexRef.current + 1
     };
     try {
       const response = await axios.post(url, payload);
@@ -78,7 +80,7 @@ const Ingame = () => {
     };
     try {
       const response = await axios.post(url, payload);
-      console.log('Lambda function invoked successfully:', response.data);
+      // console.log('Lambda function invoked successfully:', response.data);
       return response.data.body;
     } catch (error) {
       console.error('Error invoking Lambda function:', error);
@@ -88,18 +90,26 @@ const Ingame = () => {
   const pollData = async () => {
     console.log("polling:" + Date.now());
     const response = await callFetchLambda(teamId);
-    if (response.lastQuestionAnswered === lastQuestionAnswered) {
-      return;
+    // console.log(response);
+    if (response) {
+      const jsonRes = JSON.parse(response);
+      console.log(jsonRes.lastQuestionAnswered + "+++++++++++++ " + currentQuestionIndexRef.current + 1);
+      if (jsonRes && jsonRes.lastQuestionAnswered !== undefined && jsonRes.lastQuestionAnswered === currentQuestionIndexRef.current + 1) {
+        lastQuestionAnsweredRef.current = (jsonRes.lastQuestionAnswered);
+        handleNextQuestion();
+      }
     }
-    setLastQuestionAnswered(response.lastQuestionAnswered);
   };
 
   useEffect(() => {
-    setTimeout(pollData, 1000);
-  }, [currentQuestionIndex, lastQuestionAnswered]);
+    const intervalId = setInterval(() => {
+      (async () => {
+        await pollData();
+      })();
+    }, 2000);
+    return () => clearInterval(intervalId);
+  }, []);
 
-  // const handleNextQuestion = async () => {
-  //   const currentQuestion = questions[currentQuestionIndex];
   //   const team = teamId;
   //   const isAnswerCorrect = currentQuestion.answer === parseInt(selectedOption);
 
@@ -136,50 +146,49 @@ const Ingame = () => {
   // };
 
   const handleNextQuestion = async () => {
-    const currentQuestion = questions[currentQuestionIndex];
+    console.log("next question triggered: Current index: " + currentQuestionIndexRef.current);
+    const currentQuestion = questions[currentQuestionIndexRef.current];
     const team = teamId;
-    const isAnswerCorrect = currentQuestion.answer === parseInt(selectedOption);
-    // let response = [];
-    // response = await callFetchLambda(team);
-
-    const updatedTeamScores = {
-      ...teamScores,
-      [team]: (teamScores[team] || 0) + (isAnswerCorrect ? 1 : 0),
-    };
-    setTeamScores(updatedTeamScores);
-
-    setShowAnswer(true);
-
-    let realtimescore = 0;
-    const lastQuestionAnswered = currentQuestionIndex + 1;
-    Object.entries(updatedTeamScores).forEach(([team, score]) => (realtimescore = score));
-
-    callLambdaFunction(team, realtimescore, lastQuestionAnswered);
-
+    if (selectedOption !== '') {
+      const isAnswerCorrect = currentQuestion.answer === parseInt(selectedOption);
+      const updatedTeamScores = {
+        ...teamScores,
+        [team]: (teamScores[team] || 0) + (isAnswerCorrect ? 1 : 0),
+      };
+      setTeamScores(updatedTeamScores);
+      setShowAnswer(true);
+      let realtimescore = 0;
+      const lastQuestionAnswered = currentQuestionIndexRef.current + 1;
+      Object.entries(updatedTeamScores).forEach(([team, score]) => (realtimescore = score));
+      callLambdaFunction(team, realtimescore, lastQuestionAnswered);
+      // setTimeout(() => {
+      //   if (currentQuestionIndexRef.current === questions.length - 1) {
+      //     // All questions answered, call the API to update game status
+      //     const apiUrl = 'https://drz42y1qfl.execute-api.us-east-1.amazonaws.com/test/updategamestatus';
+      //     const payload = {
+      //       instanceId: team,
+      //       score: realtimescore,
+      //       lastQuestionAnswered: lastQuestionAnswered,
+      //     };
+      //     axios.post(apiUrl, payload)
+      //       .then((response) => {
+      //         console.log('Data inserted successfully:', response.data);
+      //         navigate("/game-lobby");
+      //       })
+      //       .catch((error) => {
+      //         console.error('Error calling the API:', error);
+      //       });
+      //   }
+      // }, 2000);
+      
+    }
     setTimeout(() => {
-      if (currentQuestionIndex === questions.length - 1) {
-        // All questions answered, call the API to update game status
-        const apiUrl = 'https://drz42y1qfl.execute-api.us-east-1.amazonaws.com/test/updategamestatus';
-        const payload = {
-          instanceId: team,
-          score: realtimescore,
-          lastQuestionAnswered: lastQuestionAnswered,
-        };
-        axios.post(apiUrl, payload)
-          .then((response) => {
-            console.log('Data inserted successfully:', response.data);
-            navigate("/game-lobby");
-          })
-          .catch((error) => {
-            console.error('Error calling the API:', error);
-          });
-      }
-      let nextQuestionIndexToShow = lastQuestionAnswered;
-      setCurrentQuestionIndex(nextQuestionIndexToShow);
+      setShowAnswer(false);
+      let nextQuestionIndexToShow = lastQuestionAnsweredRef.current;
+      currentQuestionIndexRef.current = (nextQuestionIndexToShow);
       setNextQuestionIndex(nextQuestionIndexToShow + 1);
       setSelectedOption('');
       setTimeRemaining(30);
-      setShowAnswer(false);
     }, 2000);
   };
 
@@ -188,33 +197,8 @@ const Ingame = () => {
     return <div>Loading...</div>;
   }
 
-  // const insertData = async (team, score) => {
-  //   // Store data in DynamoDB
-  //   const dynamoDB = new AWS.DynamoDB.DocumentClient();
-  //   const tableName = 'tblscore';
 
-  //   const teamId = team;
-  //   const teamScore = score;
-  //   const timestamp = Date.now();
-  //   console.log(teamId);
-  //   console.log(score);
-  //   const params = {
-  //     TableName: tableName,
-  //     Item: {
-  //       teamId,
-  //       score: teamScore,
-  //       timestamp,
-  //     },
-  //   };
-  //   try {
-  //     await dynamoDB.put(params).promise();
-  //   } catch (error) {
-  //     console.error('Error storing data in DynamoDB:', error);
-  //   }
-  // };
-
-
-  if (currentQuestionIndex >= questions.length) {
+  if (currentQuestionIndexRef.current >= questions.length) {
     return <div>All questions answered!
       {Object.entries(teamScores).map(([team, score]) => (
         <p key={team}>
@@ -225,13 +209,13 @@ const Ingame = () => {
     </div>;
   }
 
-  const currentQuestion = questions[currentQuestionIndex];
+  const currentQuestion = questions[currentQuestionIndexRef.current];
 
   return (
     <div>
       <div>
         {/* Render current question */}
-        <h3>Question {currentQuestionIndex + 1}</h3>
+        <h3>Question {currentQuestionIndexRef.current + 1}</h3>
         <p>{currentQuestion.question}</p>
 
         {/* Render answer options */}
