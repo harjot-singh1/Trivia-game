@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-// import AWS from 'aws-sdk';
+import AWS from 'aws-sdk';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
-// AWS.config.update({
-//   accessKeyId: 'ASIAQHWNM2YMROFGHF4W',
-//   secretAccessKey: 'eh2uH6uhJUz90hPges64/ULvZljnPtl9cL44qMZX',
-//   sessionToken: 'FwoGZXIvYXdzEPf//////////wEaDK17XF3jAX+ZgyM2qyLAAfV1JHPWvoEFRucBtnnlODuuFmSWD2CWWucoZ3ijzKaLQ5oZBxgbGRZw5ayQDNbpYtQvI1OHKu4dTKMR+RBgWE+XGXPf/a9llqBMKfHFfIBYJTkpDwppBQd1KC0NahDgOm8NrhCxBj3/bhtgVUvqfY4MpY5hycCxeCb4ri+JOnGHv1SNSgQkjnle7FHkhuBpC2bIUP1/7l52iW6Qx9Kq72w2KzXkqth/X3lMzVPYJ1qMvji7BQLAruT+4C9xC1jMsSiG7ZCmBjIt5daCWQAgHDybLGEqIznCIx7fCCXyVjOs/WpZPa9RWnfoofkjDIDJ0JmTlohK',
-//   region: 'us-east-1',
-// });
+AWS.config.update({
+  accessKeyId: 'ASIAQHWNM2YMVTBGRMM3',
+  secretAccessKey: 'ZJBnU0CRI9WExe/xy+lFoAbGR3QeAVGKwkZ0WIlg',
+  sessionToken: 'FwoGZXIvYXdzEIf//////////wEaDCG1SAPvUpAAoVIdZCLAAaecwClW5KJYtu0BKEHbbdlu42zWM9LYC1szi1yM/AiNX1mdmDwYlm2sOpzdgTlCZPRZ5GZEiUjoVstae62U9ptTO9jls6NbTFbxgLzpqtt9wMsyCKg3zw6DkTFZdez8ryGXzsSgG6u5s30+BbV8G41C9x22hI+ym6ev+z3XpwghMO97wMhV1OLMN2PsaL5pGPMFCJSqfIFfswRKaQPFJQj3Hp4sSefaVMwXnI2pJLbMzZ/XYOJ3TsoNwZIT7krMBijur7CmBjIt3j+9mr/JCaFAzbpB6n7nxPRhmCCDcetql7W2W3OoQwDpJ5zbHlOaignKRBGP',
+  region: 'us-east-1',
+});
 
 const Ingame = () => {
   const [questions, setQuestions] = useState([]);
@@ -22,12 +22,12 @@ const Ingame = () => {
   const { id, gameid } = useParams();
   const teamId = id;
   const navigate = useNavigate();
+  const [lastQuestionAnswered, setLastQuestionAnswered] = useState(0);
 
   useEffect(() => {
     const fetchData = async () => {
       axios.get(`https://8bdevixqj9.execute-api.us-east-1.amazonaws.com/game/get?id=${gameid}`)
         .then((response) => {
-          debugger
           const jsonData = response.data;
           console.log(jsonData);
           setQuestions(jsonData.questions);
@@ -85,6 +85,19 @@ const Ingame = () => {
     }
   };
 
+  const pollData = async () => {
+    console.log("polling:" + Date.now());
+    const response = await callFetchLambda(teamId);
+    if (response.lastQuestionAnswered === lastQuestionAnswered) {
+      return;
+    }
+    setLastQuestionAnswered(response.lastQuestionAnswered);
+  };
+
+  useEffect(() => {
+    setTimeout(pollData, 1000);
+  }, [currentQuestionIndex, lastQuestionAnswered]);
+
   // const handleNextQuestion = async () => {
   //   const currentQuestion = questions[currentQuestionIndex];
   //   const team = teamId;
@@ -126,9 +139,8 @@ const Ingame = () => {
     const currentQuestion = questions[currentQuestionIndex];
     const team = teamId;
     const isAnswerCorrect = currentQuestion.answer === parseInt(selectedOption);
-    let response = [];
-    response = await callFetchLambda(team);
-
+    // let response = [];
+    // response = await callFetchLambda(team);
 
     const updatedTeamScores = {
       ...teamScores,
@@ -139,11 +151,10 @@ const Ingame = () => {
     setShowAnswer(true);
 
     let realtimescore = 0;
-    const lastQuestionAnswered = response.lastQuestionAnswered || currentQuestionIndex + 1;
+    const lastQuestionAnswered = currentQuestionIndex + 1;
     Object.entries(updatedTeamScores).forEach(([team, score]) => (realtimescore = score));
 
     callLambdaFunction(team, realtimescore, lastQuestionAnswered);
-
 
     setTimeout(() => {
       if (currentQuestionIndex === questions.length - 1) {
