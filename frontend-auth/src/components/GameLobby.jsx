@@ -155,7 +155,7 @@ const GameLobby = () => {
             <label htmlFor="numberField">Enter your game pin</label>
             <div className="w-100 d-inline-flex">
               <input className='form-control w-75'
-                type="number"
+                type="text"
                 id="numberField"
                 name="numberField"
                 value={gamePin}
