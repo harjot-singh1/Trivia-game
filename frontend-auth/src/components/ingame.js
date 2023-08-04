@@ -89,19 +89,22 @@ const Ingame = () => {
     console.log("polling:" + Date.now());
     const response = await callFetchLambda(teamId);
     console.log(response);
-    const jsonRes = JSON.parse(response);
-    if (jsonRes && jsonRes.lastQuestionAnswered !== undefined) {
-      setLastQuestionAnswered(jsonRes.lastQuestionAnswered);
-      handleNextQuestion();
-    } else {
-      // Set lastQuestionAnswered to 0 if there is no data in the response
-      setLastQuestionAnswered(0);
+    if (response) {
+      const jsonRes = JSON.parse(response);
+      if (jsonRes && jsonRes.lastQuestionAnswered !== undefined) {
+        setLastQuestionAnswered(jsonRes.lastQuestionAnswered);
+        handleNextQuestion();
+      } else {
+        // Set lastQuestionAnswered to 0 if there is no data in the response
+        setLastQuestionAnswered(0);
+      }
     }
+
   };
 
   useEffect(() => {
-    const intervalId = setInterval(()=>{
-      (async ()=>{
+    const intervalId = setInterval(() => {
+      (async () => {
         await pollData();
       })();
     }, 1000);
