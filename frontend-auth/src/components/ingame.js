@@ -93,6 +93,11 @@ const Ingame = () => {
         return;
       }
       setLastQuestionAnswered(response.lastQuestionAnswered);
+      setNextQuestionIndex(response.lastQuestionAnswered);
+      setCurrentQuestionIndex(response.lastQuestionAnswered);
+      setSelectedOption('');
+      setTimeRemaining(30);
+      setShowAnswer(false);
     } else {
       // Set lastQuestionAnswered to 0 if there is no data in the response
       setLastQuestionAnswered(0);
@@ -100,17 +105,12 @@ const Ingame = () => {
   };
 
   useEffect(() => {
-    // const timeoutId = 
     const intervalId = setInterval(()=>{
       (async ()=>{
         await pollData();
       })();
     }, 1000);
-    // const interval = setTimeout(pollData, 1000);
     return () => clearInterval(intervalId);
-    // return () => {
-    //   clearTimeout(timeoutId);
-    // };
   }, []);
 
   //   const team = teamId;
@@ -187,7 +187,7 @@ const Ingame = () => {
       }
       let nextQuestionIndexToShow = lastQuestionAnswered;
       setCurrentQuestionIndex(nextQuestionIndexToShow);
-      setNextQuestionIndex(nextQuestionIndexToShow + 1);
+      //setNextQuestionIndex(nextQuestionIndexToShow + 1);
       setSelectedOption('');
       setTimeRemaining(30);
       setShowAnswer(false);
