@@ -1,7 +1,7 @@
 const AWS = require('aws-sdk');
 const dynamodb = new AWS.DynamoDB();
 const sns = new AWS.SNS();
-
+const axios = require('axios');
 
 module.exports.handler = async (event) => {
     let response = {};
@@ -9,7 +9,9 @@ module.exports.handler = async (event) => {
         const jsonifiedBody = JSON.parse(event.body);
         const userId = jsonifiedBody.userId;
         const instanceId = jsonifiedBody.instanceId;
-        if (userId && instanceId) {
+        const teamId = jsonifiedBody.teamId;
+        const teamName = jsonifiedBody.teamName;
+        if (userId && instanceId && teamId) {
             const result = await dynamodb.getItem({
                 TableName: "game_instance",
                 Key: { instance_id: { "S": "" + instanceId } }
@@ -18,23 +20,29 @@ module.exports.handler = async (event) => {
                 const itemData = AWS.DynamoDB.Converter.unmarshall(result.Item);
                 console.log(itemData.teamId);
                 // call team API
-                const response = [{ email: "madanmayank5@gmail.com" }, { email: "my905874@dal.ca" }];
-                for (let user of response) {
+                // const response = [ { email: "madanmayank5@gmail.com"},  { email: "my905874@dal.ca"}];
+                console.log("teamId: " + teamId);
+                const response = await axios.post('https://us-central1-serverless-391112.cloudfunctions.net/get-team-members', {
+                    teamId: "" + teamId
+                });
+                console.log("Team Memebers:" + JSON.stringify(response.data));
+                for (let user of response.data.message[0].team_members) {
                     if (user) {
                         await dynamodb.putItem({
                             TableName: "member_participation",
                             Item: {
-                                participation_id: { "S": "" + user.email + "_" + instanceId },
+                                participation_id: { "S": "" + user + "_" + instanceId },
                                 instance_id: { "S": "" + instanceId },
-                                userId: { "S": "" + user.email },
+                                userId: { "S": "" + user },
                                 notification_initiated: { "S": "" + Date.now() },
                                 status: { "S": "pending" }
                             }
                         }).promise();
-                        if (userId != user.email) {
-
+                        if (userId != user) {
+                            const topicARN = "arn:aws:sns:us-east-1:310590638041:notify-participants-" + teamName.replace(/[^\w\-]/gi, '');
+                            console.log("TOPIC ARN: " + topicARN);
                             const responseFromSNS = await sns.publish({
-                                TopicArn: "arn:aws:sns:us-east-1:310590638041:notifyParticipants",
+                                TopicArn: topicARN,
                                 Message: userId + " has requested you to join the game. Please log into trivia titans and enter game pin " + instanceId
                             }).promise();
                             console.log("SNS publish message: " + JSON.stringify(responseFromSNS));

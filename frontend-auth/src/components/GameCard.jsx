@@ -18,9 +18,10 @@ const GameCard = ({ id, title, category, timeFrameinMin, difficuly, expired }) =
 
     const handleJoinGame = async (gameId) => {
         try {
+            const teamId = localStorage.getItem('teamId') || 'No-team-selected';
             const response = await axios.post('https://drz42y1qfl.execute-api.us-east-1.amazonaws.com/test/joinGame', {
                 userId: localStorage.getItem('loggedInUserId') || 'madanmayank5@gmail.com',
-                teamId: localStorage.getItem('teamId') || 'team1',
+                teamId: teamId,
                 gameId: "" + gameId
             });
             if (response.status === 200) {
@@ -29,7 +30,10 @@ const GameCard = ({ id, title, category, timeFrameinMin, difficuly, expired }) =
                 localStorage.setItem('gameInstanceId', instanceId);
                 const invitationResponse = await axios.post(' https://drz42y1qfl.execute-api.us-east-1.amazonaws.com/test/inviteparticipants', {
                     userId: localStorage.getItem('loggedInUserId') || 'madanmayank5@gmail.com',
-                    instanceId: instanceId
+                    instanceId: instanceId,
+                    teamId: teamId,
+                    teamName: localStorage.getItem("teamName") || "",
+                    gameId: gameId
                 });
                 console.log("invitation-response:: " + invitationResponse);
                 navigate(`/waiting-room/${instanceId}/${gameId}`);

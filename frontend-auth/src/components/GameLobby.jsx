@@ -28,11 +28,11 @@ const GameLobby = () => {
     event.preventDefault();
     axios.post(`https://drz42y1qfl.execute-api.us-east-1.amazonaws.com/test/joinGame/checkAllowance`, {
       userId: JSON.parse(localStorage.getItem("userData")).email,
-      instanceId: gamePin
+      instanceId: gamePin.split("-")[0]
     })
       .then(res => {
         if (res?.data?.allowed) {
-          navigate(`/waiting-room/${gamePin}`);
+          navigate(`/waiting-room/${gamePin.toString().replace("-", "/")}`);
         } else {
           alert("You're not authorized to join this game.");
         }
@@ -48,27 +48,27 @@ const GameLobby = () => {
       .then(res => {
         setGames(res.data);
       })
-      const fetchTeams = async () => {
-          const requestBody = {};
-          requestBody.recipient = JSON.parse(localStorage.getItem("userData")).email;
+    const fetchTeams = async () => {
+      const requestBody = {};
+      requestBody.recipient = JSON.parse(localStorage.getItem("userData")).email;
 
-          try {
-              const responseFetchInvites = await axios.post(fetch_teams_url, requestBody);
-              const responseDataFetchInvites = responseFetchInvites.data;
-              setTeams(responseDataFetchInvites['message'])
-              const responseTeams = responseDataFetchInvites['message']
-              console.log(responseTeams.length)
-              if(responseTeams.length > 0){
-                  setTeamSelectModal(true);
-              }
-              else{
-                  setNoTeamModal(true);
-              }
-          } catch (error) {
-              console.error(error);
-          }
+      try {
+        const responseFetchInvites = await axios.post(fetch_teams_url, requestBody);
+        const responseDataFetchInvites = responseFetchInvites.data;
+        setTeams(responseDataFetchInvites['message'])
+        const responseTeams = responseDataFetchInvites['message']
+        console.log(responseTeams.length)
+        if (responseTeams.length > 0) {
+          setTeamSelectModal(true);
+        }
+        else {
+          setNoTeamModal(true);
+        }
+      } catch (error) {
+        console.error(error);
       }
-      fetchTeams();
+    }
+    fetchTeams();
   }, [])
 
   const handleFilterApply = (selectedCategory, selectedDifficulty) => {
@@ -88,9 +88,9 @@ const GameLobby = () => {
     setTeamSelectModal(false)
   };
 
-    const handleCreateNewTeam = () => {
-        navigate("/team-management/create-team");
-    }
+  const handleCreateNewTeam = () => {
+    navigate("/team-management/create-team");
+  }
 
   return (
     <>
@@ -116,31 +116,31 @@ const GameLobby = () => {
         <img src={teamImage} alt="Join Game" height='45' width='45' />
       </button>
 
-        <Modal size="m" show={teamSelectModal}
-               onHide={()=>setTeamSelectModal(false)} aria-labelledby="example-modal-sizes-title-sm">
-            <Modal.Body>
-                <div>
-                    <h2>Select Team to Operate With</h2>
-                    <ul>
-                        {teams.map((team) => (
-                            <li key={team.docId}>
-                                <button onClick={() => handleTeamSelection(team.team_id, team.team_name)}>Play in {team.team_name} team</button>
-                            </li>
-                        ))}
-                    </ul>
-                </div>
-            </Modal.Body>
-        </Modal>
+      <Modal size="m" show={teamSelectModal}
+        onHide={() => setTeamSelectModal(false)} aria-labelledby="example-modal-sizes-title-sm">
+        <Modal.Body>
+          <div>
+            <h2>Select Team to Operate With</h2>
+            <ul>
+              {teams.map((team) => (
+                <li key={team.docId}>
+                  <button onClick={() => handleTeamSelection(team.team_id, team.team_name)}>Play in {team.team_name} team</button>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </Modal.Body>
+      </Modal>
 
-        <Modal size="m" show={noTeamModal}
-               onHide={()=>setNoTeamModal(false)} aria-labelledby="example-modal-sizes-title-sm">
-            <Modal.Body>
-                <div>
-                    <h2>You are not part of any team. Please create a new team</h2>
-                    <button onClick={handleCreateNewTeam}>Create New Team</button>
-                </div>
-            </Modal.Body>
-        </Modal>
+      <Modal size="m" show={noTeamModal}
+        onHide={() => setNoTeamModal(false)} aria-labelledby="example-modal-sizes-title-sm">
+        <Modal.Body>
+          <div>
+            <h2>You are not part of any team. Please create a new team</h2>
+            <button onClick={handleCreateNewTeam}>Create New Team</button>
+          </div>
+        </Modal.Body>
+      </Modal>
 
       <Modal
         size="sm"
@@ -155,7 +155,7 @@ const GameLobby = () => {
             <label htmlFor="numberField">Enter your game pin</label>
             <div className="w-100 d-inline-flex">
               <input className='form-control w-75'
-                type="number"
+                type="text"
                 id="numberField"
                 name="numberField"
                 value={gamePin}
