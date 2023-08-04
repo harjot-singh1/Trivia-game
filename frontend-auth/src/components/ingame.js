@@ -89,11 +89,11 @@ const Ingame = () => {
     console.log("polling:" + Date.now());
     const response = await callFetchLambda(teamId);
     if (response && response.lastQuestionAnswered !== undefined) {
-      if (response.lastQuestionAnswered === lastQuestionAnswered) {
-        return;
-      }
       setLastQuestionAnswered(response.lastQuestionAnswered);
       handleNextQuestion();
+      // if (response.lastQuestionAnswered === lastQuestionAnswered) {
+      //   return;
+      // }
     } else {
       // Set lastQuestionAnswered to 0 if there is no data in the response
       setLastQuestionAnswered(0);
