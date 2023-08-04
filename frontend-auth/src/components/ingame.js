@@ -60,7 +60,7 @@ const Ingame = () => {
     const payload = {
       instanceId: team,
       score: score,
-      lastQuestionAnswered: lastQuestionAnswered
+      lastQuestionAnswered: currentQuestionIndex + 1
     };
     try {
       const response = await axios.post(url, payload);
@@ -88,18 +88,31 @@ const Ingame = () => {
   const pollData = async () => {
     console.log("polling:" + Date.now());
     const response = await callFetchLambda(teamId);
-    if (response.lastQuestionAnswered === lastQuestionAnswered) {
-      return;
+    if (response && response.lastQuestionAnswered !== undefined) {
+      if (response.lastQuestionAnswered === lastQuestionAnswered) {
+        return;
+      }
+      setLastQuestionAnswered(response.lastQuestionAnswered);
+    } else {
+      // Set lastQuestionAnswered to 0 if there is no data in the response
+      setLastQuestionAnswered(0);
     }
-    setLastQuestionAnswered(response.lastQuestionAnswered);
   };
 
   useEffect(() => {
-    setTimeout(pollData, 1000);
-  }, [currentQuestionIndex, lastQuestionAnswered]);
+    // const timeoutId = 
+    const intervalId = setInterval(()=>{
+      (async ()=>{
+        await pollData();
+      })();
+    }, 1000);
+    // const interval = setTimeout(pollData, 1000);
+    return () => clearInterval(intervalId);
+    // return () => {
+    //   clearTimeout(timeoutId);
+    // };
+  }, []);
 
-  // const handleNextQuestion = async () => {
-  //   const currentQuestion = questions[currentQuestionIndex];
   //   const team = teamId;
   //   const isAnswerCorrect = currentQuestion.answer === parseInt(selectedOption);
 
@@ -139,8 +152,6 @@ const Ingame = () => {
     const currentQuestion = questions[currentQuestionIndex];
     const team = teamId;
     const isAnswerCorrect = currentQuestion.answer === parseInt(selectedOption);
-    // let response = [];
-    // response = await callFetchLambda(team);
 
     const updatedTeamScores = {
       ...teamScores,
@@ -187,31 +198,6 @@ const Ingame = () => {
   if (questions.length === 0) {
     return <div>Loading...</div>;
   }
-
-  // const insertData = async (team, score) => {
-  //   // Store data in DynamoDB
-  //   const dynamoDB = new AWS.DynamoDB.DocumentClient();
-  //   const tableName = 'tblscore';
-
-  //   const teamId = team;
-  //   const teamScore = score;
-  //   const timestamp = Date.now();
-  //   console.log(teamId);
-  //   console.log(score);
-  //   const params = {
-  //     TableName: tableName,
-  //     Item: {
-  //       teamId,
-  //       score: teamScore,
-  //       timestamp,
-  //     },
-  //   };
-  //   try {
-  //     await dynamoDB.put(params).promise();
-  //   } catch (error) {
-  //     console.error('Error storing data in DynamoDB:', error);
-  //   }
-  // };
 
 
   if (currentQuestionIndex >= questions.length) {
