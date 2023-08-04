@@ -32,9 +32,16 @@ const CreateTeam = () => {
 
         try {
             const response = await axios.post(create_new_team_url, requestBody);
-
             const responseData = response.data;
-            navigate('/team-management/create-team-success', { state: { message: responseData['message'], teamName: responseData['team_name'] } });
+            if (responseData["team_name"]) {
+                teamMemberId.forEach(async (email) => {
+                    await axios.post("https://drz42y1qfl.execute-api.us-east-1.amazonaws.com/test/subscribe", {
+                        email: email,
+                        teamName: responseData["team_name"]
+                    });
+                })
+                navigate('/team-management/create-team-success', { state: { message: responseData['message'], teamName: responseData['team_name'] } });
+            }
         } catch (error) {
             console.error(error);
         }
