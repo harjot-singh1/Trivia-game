@@ -9,7 +9,8 @@ import axios from 'axios'
 import './AdminCategory.css'
 
 const AdminCategoryScreen = () => {
-  const [categories,setCategories] = useState([{"createdAt":"2023-07-11T17:55:29.385Z","id":2227,"subCategories":[{"name":"Maths"},{"name":"dfs"}],"name":"Science","updatedAt":"2023-07-11T17:55:29.385Z"},{"createdAt":"2023-07-11T18:21:39.415Z","id":3382,"subCategories":[{"name":"Code smell"},{"name":"Git"}],"name":"Software Development","updatedAt":"2023-07-11T18:21:39.415Z"}])
+  // const [categories,setCategories] = useState([{"createdAt":"2023-07-11T17:55:29.385Z","id":2227,"subCategories":[{"name":"Maths"},{"name":"dfs"}],"name":"Science","updatedAt":"2023-07-11T17:55:29.385Z"},{"createdAt":"2023-07-11T18:21:39.415Z","id":3382,"subCategories":[{"name":"Code smell"},{"name":"Git"}],"name":"Software Development","updatedAt":"2023-07-11T18:21:39.415Z"}])
+  const [categories,setCategories] = useState([])
   const [newCategoryName,setNewCategoryName] = useState("")
   const [newSubCategories,setNewSubCategories] = useState([])
   const [newSubCategory,setNewSubCategory] = useState("")
