@@ -4,18 +4,16 @@ const dynamodb = new AWS.DynamoDB();
 function getRandomInt(min, max) {
     min = Math.ceil(min);
     max = Math.floor(max);
-    return Math.floor(Math.random() * (max - min) + min); // The maximum is exclusive and the minimum is inclusive
+    return Math.floor(Math.random() * (max - min) + min);
 }
 module.exports.handler = async (event) => {
     let response = {};
     const gameInstanceTable = 'game_instance';
-    // console.log("event-body " + JSON.stringify(event));
-    if (event && event.userId && event.teamId && event.gameId) {
-        // const requestBody = JSON.parse(event.body);
+    if (event?.userId && event?.teamId && event?.gameId) {
         const userId = event.userId;
         const teamId = event.teamId;
         const gameId = event.gameId;
-        console.log("User " + userId + "|| team " + teamId + "|| Game " + gameId)
+        console.log("User " + userId + "|| team " + teamId + "|| Game " + gameId);
         let instanceId = 0;
         if (userId && teamId && gameId) {
             instanceId = getRandomInt(1, 25555);
@@ -30,7 +28,7 @@ module.exports.handler = async (event) => {
                         gameId: { "S": gameId }
                     }
                 }).promise();
-                console.log("Promise resolved successfully")
+                console.log("Promise resolved successfully");
             } catch (e) {
                 console.error("Failed to persist in dynamodb" + e);
                 return {

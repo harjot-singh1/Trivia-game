@@ -5,19 +5,26 @@ const dynamodb = new AWS.DynamoDB();
 const scanAsync = promisify(dynamodb.scan).bind(dynamodb);
 
 module.exports.handler = async (event) => {
-    const gameId = event.pathParameters.gameId;
-    console.log("Path parameters: " + JSON.stringify(event.pathParameters));
+    const gameId = "" + event.queryStringParameters.gameId;
+    console.log("Path parameters: " + gameId);
 
     try {
         const dbResponse = await scanAsync({
             TableName: 'game_instance'
         });
-
-        console.log("Instances found for team " + gameId + ": " + JSON.stringify(dbResponse.Items));
-
         const response = {
             statusCode: 200,
-            body: JSON.stringify(dbResponse.Items.filter(instance => instance.gameId.S === "" + gameId).map(instance => ({ name: instance.teamId.S })))
+            headers: {
+                'Access-Control-Allow-Origin': '*', // Replace '*' with your frontend domain if needed
+                'Access-Control-Allow-Headers': 'Content-Type, Authorization', // Add any other required headers
+                'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE', // Add the allowed methods
+                'Access-Control-Allow-Credentials': true, // Set to true if your requests include credentials (e.g., cookies)
+            },
+            body: JSON.stringify(dbResponse.Items.filter(instance => {
+                console.log("Instance:: " + JSON.stringify(instance));
+                return instance?.gameId?.S === "" + gameId
+            })
+                .map(instance => ({ id: instance.teamId.S })))
         };
 
         return response;

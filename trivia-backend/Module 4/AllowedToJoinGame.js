@@ -13,7 +13,7 @@ module.exports.handler = async (event) => {
             participantsResponse = await dynamodb.getItem({
                 TableName: tableName,
                 Key: {
-                    'participation_id': { S: userId + "_" + instanceId } // Assuming itemId is the primary key of your DynamoDB table
+                    'participation_id': { S: userId + "_" + instanceId }
                 }
             }).promise();
             console.log("Promise resolved successfully");
@@ -29,10 +29,10 @@ module.exports.handler = async (event) => {
         response = {
             statusCode: 201,
             headers: {
-                'Access-Control-Allow-Origin': '*', // Replace '*' with your frontend domain if needed
-                'Access-Control-Allow-Headers': 'Content-Type, Authorization', // Add any other required headers
-                'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE', // Add the allowed methods
-                'Access-Control-Allow-Credentials': true, // Set to true if your requests include credentials (e.g., cookies)
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+                'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE',
+                'Access-Control-Allow-Credentials': true,
             },
             body: JSON.stringify({ allowed: !!participantsResponse.Item }),
         };

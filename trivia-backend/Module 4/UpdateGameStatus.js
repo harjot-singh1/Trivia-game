@@ -5,12 +5,13 @@ module.exports.handler = async (event) => {
     const dynamoDB = new AWS.DynamoDB.DocumentClient();
     const gameInstanceTable = 'game_instance';
     console.log("event-body " + event.body);
-    if (event && event.body) {
+    if (event?.body) {
         const requestBody = JSON.parse(event.body);
         const instanceId = requestBody.instanceId;
         const score = requestBody.score;
         const lastQuestionAnswered = requestBody.lastQuestionAnswered;
         if (instanceId && score >= 0 && lastQuestionAnswered) {
+            // get current game instance attributes and only update those which are passed
             try {
                 const updatedValues = await dynamoDB.update({
                     TableName: gameInstanceTable,
@@ -23,14 +24,11 @@ module.exports.handler = async (event) => {
                         ':value2': score,
                         ':value3': lastQuestionAnswered
                     },
-                    ReturnValues: 'ALL_NEW', // Optional, specify what values to return after the update (ALL_NEW returns the updated item)
+                    ReturnValues: 'ALL_NEW',
                 }).promise();
-
                 console.log("data updated successfully", updatedValues);
             } catch (err) {
                 console.error('Error updating item:', err);
-                // Handle error if needed
-                // return appropriate response
             }
         } else {
             return { statusCode: 422, body: JSON.stringify('Invalid parameters') };
@@ -38,6 +36,12 @@ module.exports.handler = async (event) => {
         console.log("Setting success response");
         response = {
             statusCode: 201,
+            headers: {
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+                'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE',
+                'Access-Control-Allow-Credentials': true,
+            },
             body: JSON.stringify({ instanceId: instanceId, lastQuestionAnswered: lastQuestionAnswered, score: score }),
         };
     }

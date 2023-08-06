@@ -1,16 +1,14 @@
+// external dependency imports from lambda layers
 const AWS = require('aws-sdk');
+const sns = new AWS.SNS();
 
 module.exports.handler = async (event) => {
+    // configuring AWS dependency resource region
     AWS.config.update({ region: 'us-east-1' });
-    const sns = new AWS.SNS();
 
     const createTopic = async (teamName) => {
         try {
-            const params = {
-                Name: teamName,
-            };
-
-            const data = await sns.createTopic(params).promise();
+            const data = await sns.createTopic({ Name: teamName }).promise();
             console.log('Topic created successfully:', data.TopicArn);
             return data.TopicArn;
         } catch (err) {
@@ -35,18 +33,14 @@ module.exports.handler = async (event) => {
             // Check if the topic exists, if not, create it
             const topicExists = await isTopicExists(teamName);
             if (!topicExists) {
-                await createTopic(teamName); // Pass the teamName to createTopic
+                await createTopic(teamName);
             }
-
             const topicArn = (await sns.createTopic({ Name: teamName }).promise()).TopicArn;
-
-            const params = {
+            const data = await sns.subscribe({
                 Protocol: "email",
                 TopicArn: topicArn,
                 Endpoint: endpoint,
-            };
-
-            const data = await sns.subscribe(params).promise();
+            }).promise();
             console.log('Subscription created successfully:', data.SubscriptionArn);
             return data.SubscriptionArn;
         } catch (err) {
@@ -58,17 +52,17 @@ module.exports.handler = async (event) => {
     if (event.body) {
         const jsonifiedBody = JSON.parse(event.body);
         console.log("Event body " + jsonifiedBody.teamName);
-        console.log("Topic name: " + 'notify-participants-' + jsonifiedBody.teamName.replace(/[^\w\-]/gi, ''));
+        // create subscription under topic specifically for the team
         await createSubscription(jsonifiedBody.email, 'notify-participants-' + jsonifiedBody.teamName.replace(/[^\w\-]/gi, ''));
         return {
             statusCode: 200,
             headers: {
-                'Access-Control-Allow-Origin': '*', // Replace '*' with your frontend domain if needed
-                'Access-Control-Allow-Headers': 'Content-Type, Authorization', // Add any other required headers
-                'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE', // Add the allowed methods
-                'Access-Control-Allow-Credentials': true, // Set to true if your requests include credentials (e.g., cookies)
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+                'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE',
+                'Access-Control-Allow-Credentials': true,
             },
-            body: JSON.stringify("Notification sent successfully to " + jsonifiedBody.email),
+            body: JSON.stringify("Subscription notification sent successfully to " + jsonifiedBody.email),
         };
     }
 
