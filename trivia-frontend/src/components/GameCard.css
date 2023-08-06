@@ -1,0 +1,14 @@
+.category,
+.timeFrame {
+    font-size: 0.8em;
+}
+
+.title {
+    font-size: 1.5em;
+}
+
+.disabled-btn {
+    border: 1px solid #999999;
+    background-color: #cccccc;
+    color: #666666;
+}
