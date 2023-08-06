@@ -13,6 +13,7 @@ exports.handler = async(event) => {
             Key: {id: id}
         }
 
+        // Delete game from table
         await db_connection.delete(deleteGameById).promise()
         
         const invokeParams = {

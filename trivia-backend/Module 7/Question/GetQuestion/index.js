@@ -5,6 +5,7 @@ exports.handler = async(event) => {
         const db_connection = new AWS.DynamoDB.DocumentClient()
         const tableName = "trivia_questions"
         
+        // Get specific question from table by id
         if(event.queryStringParameters && event.queryStringParameters.id) {
             const id = event.queryStringParameters.id
             
@@ -30,6 +31,7 @@ exports.handler = async(event) => {
                 TableName: tableName
             }
 
+            // Get all questions
             const all_questions = await db_connection.scan(getAllQuestions).promise()
             const questions = all_questions.Items
             var response = {

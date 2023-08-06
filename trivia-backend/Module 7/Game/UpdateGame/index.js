@@ -7,6 +7,7 @@ exports.handler = async(event) => {
         const db_connection = new AWS.DynamoDB.DocumentClient()
         const tableName = "trivia_games"
        
+        // Update game in table
         await db_connection.put({TableName: tableName,Item: {...req}}).promise()
         
         const triggerDashboard = {

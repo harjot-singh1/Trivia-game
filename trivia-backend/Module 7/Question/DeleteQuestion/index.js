@@ -13,6 +13,7 @@ exports.handler = async(event) => {
             Key: {id: id}
         }
 
+        // Delete question from table
         await db_connection.delete(deleteQuestionById).promise()
         
         const triggerDashboard = {

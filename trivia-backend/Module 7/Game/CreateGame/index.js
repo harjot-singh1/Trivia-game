@@ -1,6 +1,7 @@
 const AWS = require('aws-sdk')
 const lambda = new AWS.Lambda()
 
+// Generate random ID
 const generateId = () => {
     const lower = 1000
     const upper = 9999
@@ -14,6 +15,7 @@ exports.handler = async(event) => {
         const db_connection = new AWS.DynamoDB.DocumentClient()
         const tableName = "trivia_games"
     
+        // Store game in table
         await db_connection.put({TableName: tableName,Item: {id: generateId(), ...req}}).promise()
     
         const invokeParams = {

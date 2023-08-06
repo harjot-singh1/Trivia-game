@@ -12,6 +12,7 @@ exports.handler = async(event) => {
             Key: {id: id}
         }
 
+        // Delete data from table
         await db_connection.delete(deleteCategoryById).promise()
         
         const invokeParams = {
