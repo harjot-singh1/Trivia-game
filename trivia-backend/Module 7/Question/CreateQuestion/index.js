@@ -41,6 +41,7 @@ exports.handler = async(event) => {
             Payload: "" 
         };
 
+        // Invoking dashboard lambda to update value
         await lambda.invoke(triggerDashboard).promise()
         
         var response = {
