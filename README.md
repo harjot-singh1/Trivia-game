@@ -1,4 +1,4 @@
-# CSCI5410-SUMMER-23-SDP23
+# Trivia game
 
 
 
